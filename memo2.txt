@@ -1,0 +1,188 @@
+
+====
+SharpMapを使って地図アプリを作ろうとしています
+
+開発環境は以下です。
+・visual sutudio 2022 community
+・.net framework
+・windowsフォームアプリケーション
+
+
+----
+SharpMapは、地理情報システム（GIS）に特化したオープンソースの.NETライブラリです。SharpMapを使用することで、Windowsフォームアプリケーションで地図を表示することができます。
+
+以下は、SharpMapを使用してWindowsフォームアプリケーションで地図を表示するための基本的な手順です。
+
+
+1.SharpMapのインストール
+SharpMapをインストールするには、NuGetパッケージマネージャーを使用します。Visual Studioの「ツール」メニューから「NuGetパッケージマネージャー」を選択し、検索ボックスに「SharpMap」と入力して、SharpMapをインストールします。
+
+
+2.地図の表示
+SharpMapを使用して地図を表示するには、SharpMap.Mapクラスを使用します。以下のようなコードをForm1.csファイルに追加して、地図を表示することができます。
+
+csharp
+Copy code
+using System;
+using System.Windows.Forms;
+using SharpMap.Layers;
+using SharpMap.Data.Providers;
+using SharpMap.Forms;
+using SharpMap.Rendering.Thematics;
+
+namespace WindowsFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            // create a new map control
+            var mapControl = new MapBox();
+            mapControl.Dock = DockStyle.Fill;
+            // add map to form
+            this.Controls.Add(mapControl);
+            // create a new map
+            var map = new SharpMap.Map(mapControl);
+            // create a new layer with a shapefile provider
+            var layer = new VectorLayer("MyLayer");
+            layer.DataSource = new ShapeFile("MyShapefile.shp", true);
+            // set the style for the layer
+            layer.Theme = new Theme();
+            // add the layer to the map
+            map.Layers.Add(layer);
+            // set the map's extents
+            map.ZoomToExtents();
+        }
+    }
+}
+
+3.地図の操作
+SharpMapを使用して地図を操作するには、SharpMap.Forms.MapBoxクラスを使用します。MapBoxクラスは、地図を表示するためのコントロールとして機能し、マウスやキーボードのイベントをキャプチャして、地図の表示や拡大縮小、移動などの操作を行います。
+
+以上の手順を実行することで、SharpMapを使用してWindowsフォームアプリケーションで地図を表示することができます。さらに、SharpMapには様々な機能があり、地図上にポイントやライン、ポリゴンなどのオブジェクトを表示したり、Web Map Service（WMS）やWeb Feature Service（WFS）などの外部データソースを使用したりすることもできます。詳細については、SharpMapの公式ドキュメントを参照してください。
+
+
+====
+以下のプログラムで地図を表示することができました。
+また、地図上に点と線を描画することもできました。
+
+            mapBox1.Map = new Map(new Size(mapBox1.Width, mapBox1.Height));
+            mapBox1.Map.BackColor = Color.Blue;
+
+            //レイヤーの作成
+            VectorLayer baseLayer = new VectorLayer("Countries");
+            //baseLayer.DataSource = new ShapeFile(@"..\..\ShapeFiles\polbnda_jpn\polbnda_jpn.shp");
+            baseLayer.DataSource = new ShapeFile(@"..\..\ShapeFiles\ne_10m_coastline\ne_10m_coastline.shp",true);
+
+            baseLayer.Style.Fill = Brushes.LimeGreen;
+            baseLayer.Style.Outline = Pens.Black;
+            baseLayer.Style.EnableOutline = true;
+
+            //マップにレイヤーを追加
+            mapBox1.Map.Layers.Add(baseLayer);
+
+
+            //線と点を書く start -------
+            VectorLayer orgLayer = new VectorLayer("子午線");
+            GeometryFactory gf = new GeometryFactory();
+            List<IGeometry> eomColl = new List<IGeometry>();
+
+            //線を書く
+            Coordinate[] linePos = { new Coordinate(135, 30), new Coordinate(135, 37) };
+            eomColl.Add(gf.CreateLineString(linePos));
+
+            //点を書く
+            eomColl.Add(gf.CreatePoint(new Coordinate(135, 35)));
+
+            GeometryProvider vpro = new GeometryProvider(eomColl);
+            orgLayer.DataSource = vpro;
+
+            mapBox1.Map.Layers.Add(orgLayer);
+            //線と点を書く end -------
+
+
+            //Zoom制限
+            mapBox1.Map.MinimumZoom = 0.1;
+            mapBox1.Map.MaximumZoom = 360.0;
+
+            mapBox1.Map.ZoomToExtents();
+            mapBox1.Refresh();
+            
+            
+----
+それは素晴らしいです！SharpMapを使用して地図アプリを作成することは、多くの場合、地理的な情報を視覚化するために必要な多くの機能を提供するため、非常に役立ちます。
+
+ただし、注意すべきことがいくつかあります。例えば、ne_10m_coastline.shpのような大規模なシェープファイルを使用する場合、シェープファイルを開くのに時間がかかることがあります。また、レンダリングするときには、メモリとプロセッサの使用に注意する必要があります。
+
+さて、あなたがSharpMapを使用して地図アプリを作成する上で、他に何か質問や問題がありますか？
+
+
+
+====
+1 / 3
+
+描画した点と線を削除したいです。
+
+----
+描画した点と線を削除するには、そのレイヤーをマップから取り除くだけで済みます。具体的には、以下のようにして、mapBox1.Map.Layers.Remove(orgLayer)を使用します。
+
+mathematica
+Copy code
+mapBox1.Map.Layers.Remove(orgLayer);
+mapBox1.Refresh();
+これにより、orgLayerに含まれる点や線が地図から削除されます。ただし、このコードを実行する前に、orgLayerが作成されていることを確認してください。
+
+
+====
+2 / 3
+
+描画した点のみを削除したいです。
+
+----
+SharpMapでは、特定のレイヤーのすべてのフィーチャー（地物）を削除することができます。削除するには、レイヤーのDataSourceプロパティからIFeatureSetオブジェクトを取得し、IFeatureSetオブジェクトのFeaturesプロパティから、特定のフィーチャーを見つけ、削除することができます。
+
+具体的には、以下のようにして、先ほど追加したorgLayerから、最後に追加した点のフィーチャーを削除することができます。
+
+scss
+Copy code
+// 最後に追加されたフィーチャーを取得する
+IFeature lastFeature = orgLayer.DataSource.Features.Last();
+
+// フィーチャーを削除する
+orgLayer.DataSource.Delete(lastFeature);
+
+// レイヤーを更新する
+orgLayer.DataSource.Initialize();
+このコードでは、orgLayerから最後に追加されたフィーチャーを取得し、Delete()メソッドで削除しています。最後に、Initialize()メソッドを呼び出して、レイヤーを更新します。
+
+このコードを使用する前に、orgLayer.DataSource.Features.Countを確認して、レイヤーにフィーチャーがあることを確認してください。また、Delete()メソッドを呼び出す前に、lastFeatureがnullでないことを確認する必要があります。
+
+
+====
+3 / 3
+
+描画した線のみを削除したいです。
+
+----
+線を削除するには、orgLayerからGeometryProviderのリストから線のIGeometryを削除し、mapBox1.Refresh()を呼び出して、地図コントロールを更新する必要があります。以下は、線を削除するための簡単な例です。
+
+csharp
+Copy code
+//線を削除する
+List<IGeometry> geometries = orgLayer.DataSource.GetGeometries();
+IGeometry lineGeometry = geometries.FirstOrDefault(g => g.GeometryType == "LineString");
+if (lineGeometry != null)
+{
+    geometries.Remove(lineGeometry);
+    orgLayer.DataSource = new GeometryProvider(geometries);
+    mapBox1.Refresh();
+}
+この例では、IGeometryのリストを取得し、最初に見つかった"LineString"ジオメトリ型の線を削除しています。次に、残りのジオメトリでGeometryProviderを再作成し、レイヤーに再設定します。最後に、mapBox1.Refresh()を呼び出して、地図コントロールを更新します。
+
+この例は、簡単なものであり、実際にはもっと複雑な場合もあります。しかし、この例から、GeometryProviderを使用してレイヤーのジオメトリを変更する方法が分かると思います。
+
+
+====
+
+

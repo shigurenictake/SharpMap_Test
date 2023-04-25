@@ -63,43 +63,66 @@ namespace SharpMap_Test
             //マップにレイヤーを追加
             mapBox1.Map.Layers.Add(baseLayer);
 
-
             //線と点を書く start -------
-            VectorLayer orgLayer = new VectorLayer("symbol");
+            //レイヤの作成
+            VectorLayer orgLayer = new VectorLayer("symbolLayer");
+
+            //ジオメトリ準備
             GeometryFactory gf = new GeometryFactory();
             List<IGeometry> eomColl = new List<IGeometry>();
-
             //線を書く
             Coordinate[] linePos = { new Coordinate(135, 30), new Coordinate(135, 37) };
             eomColl.Add(gf.CreateLineString(linePos));
-
             //点を書く
             eomColl.Add(gf.CreatePoint(new Coordinate(135, 35)));
 
+            //レイヤに反映
             GeometryProvider vpro = new GeometryProvider(eomColl);
             orgLayer.DataSource = vpro;
 
+            //レイヤをmapBoxに追加
             mapBox1.Map.Layers.Add(orgLayer);
             //線と点を書く end -------
 
+            //黄色い点を書く start -------
+            //レイヤの作成
+            VectorLayer ypLayer = new VectorLayer("ypLayer");
+
+            //ジオメトリ準備
+            GeometryFactory ypgf = new GeometryFactory();
+            List<IGeometry> ypeomColl = new List<IGeometry>();
+            //点を書く
+            ypeomColl.Add(ypgf.CreatePoint(new Coordinate(140, 30)));
+
+            //レイヤに反映
+            GeometryProvider ypvpro = new GeometryProvider(ypeomColl);
+            ypLayer.DataSource = ypvpro;
+            //点の色を指定
+            ypLayer.Style.PointColor = Brushes.Yellow;
+
+            //レイヤをmapBoxに追加
+            mapBox1.Map.Layers.Add(ypLayer);
+            //線と点を書く end -------
 
             //Zoom制限
             mapBox1.Map.MinimumZoom = 0.1;
             mapBox1.Map.MaximumZoom = 360.0;
 
+            //全レイヤの範囲にズームする(初期化？)
             mapBox1.Map.ZoomToExtents();
+
+            //mapBoxを再描画
             mapBox1.Refresh();
             //======================
         }
 
-        //イベント - 地図上のマウス移動
+        //イベント - 地図上でマウス移動
         private void mapBox1_MouseMove(Coordinate worldPos, MouseEventArgs imagePos)
         {
             UpdateWorldPos(worldPos);
         }
 
-
-        //イベント - 地図上のクリック
+        //イベント - 地図上でクリック
         private void mapBox1_Click(object sender, EventArgs e)
         {
             UpdateSymbolLayer();
@@ -114,136 +137,106 @@ namespace SharpMap_Test
             this.label1.Text = worldPos.ToString();
         }
 
-        //symbolレイヤーの更新（考え中）
+        //symbolレイヤーの更新
         private void UpdateSymbolLayer()
         {
-            //"symbol" レイヤーを取得
-            var symbolLayer = mapBox1.Map.GetLayerByName("symbol") as SharpMap.Layers.VectorLayer;
+            //レイヤ取得
+            VectorLayer rlayer = GetVectorLayerByName(mapBox1, "symbolLayer");
 
-            //"symbol" レイヤーに描画されている赤色の点を取得
+            //ジオメトリ（地図上に配置した LINESTRING や POINT など）を取得
+            Collection<IGeometry> geoms = GetIGeometrys(mapBox1, rlayer);
+            //foreach (IGeometry geom in geoms) { Console.WriteLine(geom); }
 
-            //点を黄色に変更
-        }
-
-        //削除？
-        private void DeleteLayer()
-        {
-            string layerName = "myLayer"; // 削除するレイヤーの名前
-
-            // レイヤーを取得
-            var layer =  mapBox1.Map.GetLayerByName(layerName) as SharpMap.Layers.VectorLayer;
-
-            // マップコントロールからレイヤーを削除
-            mapBox1.Map.Layers.Remove(layer);
-        }
-
-        //symbolレイヤーの更新（ボツ）
-        private void UpdateSymbolLayer_Botu1()
-        {
-            //symbolレイヤーを取得する
-            VectorLayer symbolLayer = null;
-            string layerName = "symbol";
-
-            foreach (var layer in mapBox1.Map.Layers)
+            //点を削除(複数該当する場合はindex上で前にいるもの)
+            foreach (IGeometry geom in geoms) 
             {
-                if (layer is VectorLayer vectorLayer && vectorLayer.LayerName == layerName)
+                //Console.WriteLine(geom.GeometryType);
+                if(geom.GeometryType == "Point")
                 {
-                    symbolLayer = vectorLayer;
+                    geoms.Remove(geom);
                     break;
                 }
             }
 
-            if (symbolLayer != null)
-            {
-                // 交差するジオメトリを指定します（ここでは矩形を指定しています）
-                var geometryFactory = new NetTopologySuite.Geometries.GeometryFactory();
-                var envelope = new GeoAPI.Geometries.Envelope(100, 200, 300, 400);
-                var geometry = geometryFactory.ToGeometry(envelope);
+            //レイヤに反映
+            GeometryProvider vpro = new GeometryProvider(geoms);
+            rlayer.DataSource = vpro;
 
-                Console.WriteLine(geometry);
+            //レイヤをmapBoxに追加
+            mapBox1.Map.Layers.Add(rlayer);
 
-                //List<IGeometry> eomColl = new List<IGeometry>();
-                //IGeometry geometry = eomColl[0]; // 交差するジオメトリを指定する
+            //全レイヤの範囲にズームする
+            mapBox1.Map.ZoomToExtents();
 
-                SharpMap.Data.FeatureDataSet featureSet = new SharpMap.Data.FeatureDataSet();
-
-                Console.WriteLine(featureSet);
-
-                //symbolLayer.DataSource.GetFeatureTableName(countriesLayer.DataSource.GetGeomType());
-                var featureSetSL = symbolLayer.DataSource as SharpMap.Data.Providers.IProvider;
-
-                Console.WriteLine(featureSetSL);
-
-                featureSet.Tables.Add((SharpMap.Data.FeatureDataTable)featureSetSL);
-                //symbolLayer.DataSource.ExecuteIntersectionQuery(geometry.Envelope, featureSet);
-                //DataTable featureDataTable = featureSet.Tables[0];
-
-
-                /*              
-                 *              SharpMap.Data.FeatureDataSet featureSet = new SharpMap.Data.FeatureDataSet();
-                                var featureSetb = symbolLayer.DataSource as SharpMap.Data.Providers.IProvider;
-                                featureSet.Tables.Add(symbolLayer.DataSource.GetFeatureTableName(symbolLayer.DataSource.GetGeomType()));
-                                countriesLayer.DataSource.ExecuteIntersectionQuery(geometry.Envelope, featureSet);
-                                DataTable featureDataTable = featureSet.Tables[0];
-                */
-
-
-
-                //var featureSet = symbolLayer.DataSource as SharpMap.Data.Providers.IProvider;
-                //var featureDataTable = featureSet.ExecuteIntersectionQuery(geometry.Envelope, (SharpMap.Data.FeatureDataSet)geometry);
-                //var featureDataTable = featureSet.ExecuteIntersectionQuery(geometry.Envelope, (SharpMap.Data.FeatureDataSet)geometry);
-                //foreach (SharpMap.Data.FeatureDataRow row in featureDataTable.Rows)
-
-
-
-                /*                    var features = symbolLayer.DataSource.GetFeaturesIntersection(geometries);
-                                foreach (IFeature feature in features)
-
-
-                                    // symbolレイヤーに描画された赤い点を黄色に変更する
-                                    foreach (var feature in symbolLayer.DataSource.GetGeometriesInView(new GeoAPI.Geometries.Envelope(-90, 90, -180, 180)) )
-                                {
-                                    Geometry geo = new Geometry();
-                                    if (feature.GeometryType is new Geometry().InteriorPoint point )
-                                    {
-                                        point.Symbol = new Symbol(Color.Yellow, 10, new Pen(Color.Yellow));
-                                    }
-                                }
-                */
-
-
-                // MapBoxを再描画する
-                //mapBox1.Refresh();
-            }
-            else
-            {
-                // Countriesレイヤーが見つからなかった場合の処理
-            }
+            //mapBoxを再描画
+            mapBox1.Refresh();
         }
 
-        //symbolレイヤーの更新（ボツ）
-        private void UpdateSymbolLayer_Botu2()
+        /// <summary>
+        /// ジオメトリ（地図上に配置した LINESTRING や POINT など）を取得
+        /// </summary>
+        /// <param name="mapBox"></param>
+        /// <param name="layer"></param>
+        private Collection<IGeometry> GetIGeometrys(MapBox mapBox, VectorLayer layer)
         {
-            // 1. "symbol" レイヤーを取得
-            var symbolLayer = mapBox1.Map.GetLayerByName("symbol") as SharpMap.Layers.VectorLayer;
+            //指定した領域の特徴を返す Envelope( x1 , x2 , y1, y2)
+            Collection<IGeometry> geoms =
+                layer.DataSource.GetGeometriesInView(
+                    new GeoAPI.Geometries.Envelope(-180, 180, -90, 90) //地図全体(経度-180～180, 緯度-90～90で囲まれる四角形)
+                );
+            return geoms;
 
-            // 2. "symbol" レイヤーに描画されている赤色の点を取得
-            //var symbolFeatures = symbolLayer.DataSource.GetFeatures().Where(f => f.Geometry is Point && f["color"].ToString() == "red");
-            var symbolFeatures = symbolLayer.DataSource as SharpMap.Data.Providers.IProvider;
+            /*
+            //使用例
+            foreach (IGeometry geom in geoms) { Console.WriteLine(geom); }
+            */
+        }
 
-            /*            if (!symbolFeatures.Any())
-                        {
-                            // 赤色の点が存在しない場合の処理
-                            return;
-                        }*/
+        /// <summary>
+        /// レイヤ削除
+        /// </summary>
+        /// <param name="mapBox"></param>
+        /// <param name="layername"></param>
+        private void RemoveLayer(MapBox mapBox, string layername)
+        {
+            //Layersのindexを初めから検索し最初に該当したレイヤを取得
+            ILayer rlayer = mapBox.Map.Layers.GetLayerByName(layername);
+            //symbolレイヤを削除
+            mapBox1.Map.Layers.Remove(rlayer);
+        }
 
-            // 3. 点を黄色に変更
-            foreach (var symbolFeature in symbolFeatures)
+        /// <summary>
+        /// VectorLayer型でレイヤ取得
+        /// メリット：DataSourceを参照できる
+        /// </summary>
+        /// <param name="mapBox"></param>
+        /// <param name="layername"></param>
+        /// <returns></returns>
+        private VectorLayer GetVectorLayerByName(MapBox mapBox, string layername)
+        {
+            VectorLayer rlayer = new VectorLayer("");
+
+            LayerCollection rlayers = mapBox.Map.Layers;
+            foreach(VectorLayer layer in rlayers)
             {
-                symbolFeature.Style.Fill = new SolidBrush(Color.Yellow);
+                if (layer.LayerName == layername)
+                {
+                    rlayer = layer;
+                    break;
+                }
             }
-            symbolLayer.RenderRequired = true;
-            mapBox1.Refresh();
+
+            return rlayer;
+
+            /*
+            //使用例
+            //指定した領域()の特徴を返す Envelope( x1 , x2 , y1, y2)
+            Collection<IGeometry> geoms =
+                rlayer.DataSource.GetGeometriesInView(
+                    new GeoAPI.Geometries.Envelope(130, 140, 30, 40) //経度130～140, 緯度30～40で囲まれる四角形
+                );
+            foreach (IGeometry geom in geoms) { Console.WriteLine(geom); }
+            */
         }
     }
 }

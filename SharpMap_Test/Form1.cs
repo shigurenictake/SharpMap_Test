@@ -75,6 +75,11 @@ namespace SharpMap_Test
             eomColl.Add(gf.CreateLineString(linePos));
             //点を書く
             eomColl.Add(gf.CreatePoint(new Coordinate(135, 35)));
+            //線を書く
+            Coordinate[] linePosb = { new Coordinate(130, 35), new Coordinate(140, 35) };
+            eomColl.Add(gf.CreateLineString(linePosb));
+            //点を書く
+            eomColl.Add(gf.CreatePoint(new Coordinate(145, 45)));
 
             //レイヤに反映
             GeometryProvider vpro = new GeometryProvider(eomColl);
@@ -143,7 +148,7 @@ namespace SharpMap_Test
             //レイヤ取得
             VectorLayer rlayer = GetVectorLayerByName(mapBox1, "symbolLayer");
 
-            //ジオメトリ（地図上に配置した LINESTRING や POINT など）を取得
+            //ジオメトリ（地図上に配置した LineString や Point など）を取得
             Collection<IGeometry> geoms = GetIGeometrys(mapBox1, rlayer);
             //foreach (IGeometry geom in geoms) { Console.WriteLine(geom); }
 

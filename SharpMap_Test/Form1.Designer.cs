@@ -32,9 +32,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.richTextBoxLayerList = new System.Windows.Forms.RichTextBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.richTextBoxPointLayerList = new System.Windows.Forms.RichTextBox();
+            this.richTextBoxLineStringLayerList = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // mapBox1
@@ -88,15 +92,6 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 524);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(134, 12);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "pointLayerレイヤ一覧表示";
-            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(308, 513);
@@ -116,14 +111,62 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "地理座標\r\n→ピクセル座標";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(794, 12);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(152, 23);
+            this.button4.TabIndex = 8;
+            this.button4.Text = "レイヤ一覧更新";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // richTextBoxLayerList
+            // 
+            this.richTextBoxLayerList.Location = new System.Drawing.Point(794, 41);
+            this.richTextBoxLayerList.Name = "richTextBoxLayerList";
+            this.richTextBoxLayerList.Size = new System.Drawing.Size(334, 96);
+            this.richTextBoxLayerList.TabIndex = 9;
+            this.richTextBoxLayerList.Text = "";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(795, 143);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(151, 45);
+            this.button5.TabIndex = 10;
+            this.button5.Text = "pointLayerの一覧更新\r\nlineStringLayerの一覧更新";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // richTextBoxPointLayerList
+            // 
+            this.richTextBoxPointLayerList.Location = new System.Drawing.Point(795, 194);
+            this.richTextBoxPointLayerList.Name = "richTextBoxPointLayerList";
+            this.richTextBoxPointLayerList.Size = new System.Drawing.Size(333, 96);
+            this.richTextBoxPointLayerList.TabIndex = 11;
+            this.richTextBoxPointLayerList.Text = "";
+            // 
+            // richTextBoxLineStringLayerList
+            // 
+            this.richTextBoxLineStringLayerList.Location = new System.Drawing.Point(794, 296);
+            this.richTextBoxLineStringLayerList.Name = "richTextBoxLineStringLayerList";
+            this.richTextBoxLineStringLayerList.Size = new System.Drawing.Size(333, 96);
+            this.richTextBoxLineStringLayerList.TabIndex = 13;
+            this.richTextBoxLineStringLayerList.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 654);
+            this.ClientSize = new System.Drawing.Size(1140, 654);
+            this.Controls.Add(this.richTextBoxLineStringLayerList);
+            this.Controls.Add(this.richTextBoxPointLayerList);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.richTextBoxLayerList);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
@@ -141,9 +184,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.RichTextBox richTextBoxLayerList;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.RichTextBox richTextBoxPointLayerList;
+        private System.Windows.Forms.RichTextBox richTextBoxLineStringLayerList;
     }
 }
 

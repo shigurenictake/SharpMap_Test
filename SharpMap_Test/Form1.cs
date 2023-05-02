@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpMap.Drawing;
 using System.Collections.ObjectModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SharpMap_Test
 {
@@ -122,8 +123,11 @@ namespace SharpMap_Test
             VectorLayer testLayer = new VectorLayer("testLayer");
 
             //ジオメトリ準備
-            GeometryFactory gf = new GeometryFactory();
             List<IGeometry> eomColl = new List<IGeometry>();
+
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
             //線を書く
             Coordinate[] linePos = { new Coordinate(135, 30), new Coordinate(135, 37) };
             eomColl.Add(gf.CreateLineString(linePos));
@@ -181,6 +185,7 @@ namespace SharpMap_Test
         private void mapBox1_Click(object sender, EventArgs e)
         {
             UpdatePointLayer();//pointLayerレイヤの更新
+            UpdateLineStringLayer();//pointLayerレイヤの更新
         }
 
         //イベント - button1クリック
@@ -199,6 +204,19 @@ namespace SharpMap_Test
         private void button3_Click(object sender, EventArgs e)
         {
             RemoveLayerOtherThanBase(mapBox1); //ベース以外のレイヤ削除
+        }
+
+        //イベント - button4クリック
+        private void button4_Click(object sender, EventArgs e)
+        {
+            UpdeteLayerList(); //レイヤリストの更新
+        }
+
+        //イベント - button5クリック
+        private void button5_Click(object sender, EventArgs e)
+        {
+            UpdeteGeometryListOfPointLayer(); //ジオメトリリストの更新
+            UpdeteGeometryListOfStringLayer(); //ジオメトリリストの更新
         }
 
         //地理座標系上の座標の更新
@@ -238,17 +256,75 @@ namespace SharpMap_Test
             layer.DataSource = gpro;
             //レイヤをmapBoxに追加
             mapBox1.Map.Layers.Add(layer);
+            //レイヤを削除
+            mapBox1.Map.Layers.Remove(layer);
             //mapBoxを再描画
             mapBox1.Refresh();
-
-            //ラベルにジオメトリを一覧で表示 - pointLayerレイヤ一覧表示
-            Collection<IGeometry> igeomsT = this.GetIGeometrysAll( GetVectorLayerByName(mapBox1, "pointLayer") );
-            string textT = string.Empty;
-            foreach (IGeometry igeom in igeomsT) { textT = textT + igeomsT.IndexOf(igeom) + " : " + igeom + "\n"; }
-            this.label3.Text = textT;
         }
 
-        //symbolレイヤーの更新
+        //lineStringLayerレイヤの更新
+        private void UpdateLineStringLayer()
+        {
+            //pointLayerから最後の2点を取得
+            Coordinate[] linePos = GetRecently2Points("pointLayer");
+
+            if ( (linePos[0] != null) && (linePos[1] != null))
+            {
+                //レイヤ取得
+                VectorLayer layer = this.GetVectorLayerByName(mapBox1, "lineStringLayer");
+                //ジオメトリ取得
+                Collection<IGeometry> igeoms = this.GetIGeometrysAll(layer);
+
+                //図形生成クラス
+                GeometryFactory gf = new GeometryFactory();
+
+                //Coordinate[] linePos = { new Coordinate(135, 30), new Coordinate(135, 37) };
+                //線をジオメトリに追加
+                igeoms.Add(gf.CreateLineString(linePos));
+
+                //ジオメトリをレイヤに反映
+                GeometryProvider gpro = new GeometryProvider(igeoms);
+                layer.DataSource = gpro;
+                //レイヤをmapBoxに追加
+                mapBox1.Map.Layers.Add(layer);
+                //レイヤを削除
+                mapBox1.Map.Layers.Remove(layer);
+                //mapBoxを再描画
+                mapBox1.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// 指定レイヤから最近の2つのポイントを取得する
+        /// </summary>
+        private Coordinate[] GetRecently2Points(string layername)
+        {
+            //レイヤ取得
+            VectorLayer layer = this.GetVectorLayerByName(mapBox1, layername);
+            //レイヤ内の全ジオメトリを取得
+            Collection<IGeometry> igeoms = GetIGeometrysAll(layer);
+
+            //レイヤ内の全ジオメトリの中からPointのものを抽出
+            Collection<IGeometry> igeomsPoint = new Collection<IGeometry>();
+            foreach (IGeometry igeom in igeoms)
+            {
+                if (igeom.GeometryType == "Point")
+                {
+                    igeomsPoint.Add(igeom);
+                }
+            }
+            //Pointが2つ以上ならばコレクション上、最後の2点を取得する
+            Coordinate[] linePos = new Coordinate[2];
+            int cnt = igeomsPoint.Count;
+            if (cnt >= 2) {
+                linePos[0] = igeomsPoint[cnt - 2].Coordinate;
+                linePos[1] = igeomsPoint[cnt - 1].Coordinate;
+            } 
+
+            return linePos;
+        }
+
+        //testLayerレイヤーの更新
         private void UpdateTestLayer()
         {
             //レイヤ取得
@@ -276,6 +352,47 @@ namespace SharpMap_Test
             mapBox1.Map.Layers.Add(layer);
             //mapBoxを再描画
             mapBox1.Refresh();
+        }
+
+        //レイヤリストの更新
+        private void UpdeteLayerList()
+        {
+            //レイヤリストの取得
+            string text = null;
+            LayerCollection layers = mapBox1.Map.Layers;
+            for (int i = 0; i < layers.Count; i++) {
+                text = text + $"{i}" + ":" + $"{layers[i].LayerName }" + "\n";
+
+            }
+            richTextBoxLayerList.Text = text;
+        }
+
+        //pointLayerレイヤのジオメトリ一覧更新
+        private void UpdeteGeometryListOfPointLayer()
+        {
+            //レイヤ内の全ジオメトリを取得
+            Collection<IGeometry> igeoms = this.GetIGeometrysAll(GetVectorLayerByName(mapBox1, "pointLayer"));
+            //ジオメトリ一覧をラベルに表示 ( pointLayerレイヤ一覧表示 )
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++)
+            {
+                text = text + $"[{i}]" + " : " + $"{igeoms[i]}" + "\n";
+            }
+            this.richTextBoxPointLayerList.Text = text;
+        }
+
+        //lineStringLayerレイヤのジオメトリ一覧更新
+        private void UpdeteGeometryListOfStringLayer()
+        {
+            //レイヤ内の全ジオメトリを取得
+            Collection<IGeometry> igeoms = this.GetIGeometrysAll(GetVectorLayerByName(mapBox1, "lineStringLayer"));
+            //ジオメトリ一覧をラベルに表示 ( pointLayerレイヤ一覧表示 )
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++)
+            {
+                text = text + $"[{i}]" + " : " + $"{igeoms[i]}" + "\n";
+            }
+            this.richTextBoxLineStringLayerList.Text = text;
         }
 
         /// <summary>
@@ -310,7 +427,7 @@ namespace SharpMap_Test
         }
 
         /// <summary>
-        /// ジオメトリ（地図上に配置した LineString や Point など）を取得
+        /// レイヤ内の全ジオメトリ（地図上に配置した LineString や Point など）を取得
         /// 範囲:地図全体(経度-180～180, 緯度-90～90で囲まれる四角形)
         /// </summary>
         /// <param name="layer"></param>
@@ -374,5 +491,6 @@ namespace SharpMap_Test
             //mapBoxを再描画
             mapBox1.Refresh();
         }
+
     }
 }

@@ -361,7 +361,7 @@ namespace SharpMap_Test
             string text = null;
             LayerCollection layers = mapBox1.Map.Layers;
             for (int i = 0; i < layers.Count; i++) {
-                text = text + $"{i}" + ":" + $"{layers[i].LayerName }" + "\n";
+                text = text + $"[{i}]" + " : " + $"{layers[i].LayerName }" + "\n";
 
             }
             richTextBoxLayerList.Text = text;

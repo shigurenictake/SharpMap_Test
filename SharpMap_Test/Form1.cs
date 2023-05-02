@@ -203,7 +203,7 @@ namespace SharpMap_Test
         //イベント - button3クリック
         private void button3_Click(object sender, EventArgs e)
         {
-            RemoveLayerOtherThanBase(mapBox1); //ベース以外のレイヤ削除
+            InitLayerOtherThanBase(mapBox1); //ベース以外のレイヤ初期化
         }
 
         //イベント - button4クリック
@@ -468,7 +468,7 @@ namespace SharpMap_Test
         /// ベース以外の全レイヤ削除
         /// <param name="mapBox"></param>
         /// </summary>
-        private void RemoveLayerOtherThanBase(MapBox mapBox)
+        private void InitLayerOtherThanBase(MapBox mapBox)
         {
             //ベース(0番目)以外のレイヤ削除
             while(mapBox.Map.Layers.Count > 1) {

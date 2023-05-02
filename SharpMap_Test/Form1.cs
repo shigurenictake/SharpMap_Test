@@ -40,7 +40,8 @@ namespace SharpMap_Test
             this.InitializeBaseLayer();
             this.InitializePointLayer();
             this.InitializeLineStringLayer();
-            this.InitializeOtherLayer();
+            this.InitializeTestLayer();
+            this.InitializeTest2Layer();
 
             //Zoom制限
             mapBox1.Map.MinimumZoom = 0.1;
@@ -113,12 +114,12 @@ namespace SharpMap_Test
             mapBox1.Map.Layers.Add(layer);
         }
 
-        //他のレイヤ初期化
-        private void InitializeOtherLayer()
+        //Testレイヤ初期化
+        private void InitializeTestLayer()
         {
             //線と点を書く start -------
             //レイヤの作成
-            VectorLayer orgLayer = new VectorLayer("symbolLayer");
+            VectorLayer testLayer = new VectorLayer("testLayer");
 
             //ジオメトリ準備
             GeometryFactory gf = new GeometryFactory();
@@ -136,15 +137,21 @@ namespace SharpMap_Test
 
             //レイヤに反映
             GeometryProvider vpro = new GeometryProvider(eomColl);
-            orgLayer.DataSource = vpro;
+            testLayer.DataSource = vpro;
+
+            testLayer.Style.PointColor = Brushes.Magenta;
 
             //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(orgLayer);
+            mapBox1.Map.Layers.Add(testLayer);
             //線と点を書く end -------
+        }
 
+        //Testレイヤ初期化
+        private void InitializeTest2Layer()
+        {
             //黄色い点を書く start -------
             //レイヤの作成
-            VectorLayer ypLayer = new VectorLayer("ypLayer");
+            VectorLayer test2Layer = new VectorLayer("test2Layer");
 
             //ジオメトリ準備
             GeometryFactory ypgf = new GeometryFactory();
@@ -154,12 +161,12 @@ namespace SharpMap_Test
 
             //レイヤに反映
             GeometryProvider ypvpro = new GeometryProvider(ypeomColl);
-            ypLayer.DataSource = ypvpro;
+            test2Layer.DataSource = ypvpro;
             //点の色を指定
-            ypLayer.Style.PointColor = Brushes.Yellow;
+            test2Layer.Style.PointColor = Brushes.Yellow;
 
             //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(ypLayer);
+            mapBox1.Map.Layers.Add(test2Layer);
             //線と点を書く end -------
         }
 
@@ -185,7 +192,7 @@ namespace SharpMap_Test
         //イベント - button2クリック
         private void button2_Click(object sender, EventArgs e)
         {
-            UpdateSymbolLayer(); //symbolレイヤーの更新
+            UpdateTestLayer(); //testレイヤーの更新
         }
 
         //イベント - button3クリック
@@ -234,38 +241,39 @@ namespace SharpMap_Test
             //mapBoxを再描画
             mapBox1.Refresh();
 
-            //ラベルにジオメトリを一覧で表示
-            Collection<IGeometry> igeomT = this.GetIGeometrysAll( GetVectorLayerByName(mapBox1, "pointLayer") );
+            //ラベルにジオメトリを一覧で表示 - pointLayerレイヤ一覧表示
+            Collection<IGeometry> igeomsT = this.GetIGeometrysAll( GetVectorLayerByName(mapBox1, "pointLayer") );
             string textT = string.Empty;
-            foreach (IGeometry igeom in igeoms) { textT = textT + igeom + "\n"; }
+            foreach (IGeometry igeom in igeomsT) { textT = textT + igeomsT.IndexOf(igeom) + " : " + igeom + "\n"; }
             this.label3.Text = textT;
         }
 
         //symbolレイヤーの更新
-        private void UpdateSymbolLayer()
+        private void UpdateTestLayer()
         {
             //レイヤ取得
-            VectorLayer rlayer = this.GetVectorLayerByName(mapBox1, "symbolLayer");
+            VectorLayer layer = this.GetVectorLayerByName(mapBox1, "testLayer");
             //レイヤが存在しない場合は何もしない
-            if (rlayer == null ) { return; }
+            if (layer == null ) { return; }
             //ジオメトリ（地図上に配置した LineString や Point など）を取得
-            Collection<IGeometry> geoms = this.GetIGeometrysAll(rlayer);
+            Collection<IGeometry> igeoms = this.GetIGeometrysAll(layer);
             //foreach (IGeometry geom in geoms) { Console.WriteLine(geom); }
+
             //点を削除(複数該当する場合はindex上で前にいるもの)
-            foreach (IGeometry geom in geoms) 
+            foreach (IGeometry igeom in igeoms) 
             {
                 //Console.WriteLine(geom.GeometryType);
-                if(geom.GeometryType == "Point")
+                if(igeom.GeometryType == "Point")
                 {
-                    geoms.Remove(geom);
+                    igeoms.Remove(igeom);
                     break;
                 }
             }
             //レイヤに反映
-            GeometryProvider vpro = new GeometryProvider(geoms);
-            rlayer.DataSource = vpro;
+            GeometryProvider vpro = new GeometryProvider(igeoms);
+            layer.DataSource = vpro;
             //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(rlayer);
+            mapBox1.Map.Layers.Add(layer);
             //mapBoxを再描画
             mapBox1.Refresh();
         }
@@ -357,7 +365,7 @@ namespace SharpMap_Test
         }
 
         /// <summary>
-        /// 全体表示
+        /// レイヤ全体を表示する
         /// </summary>
         private void ViewWholeMap()
         {

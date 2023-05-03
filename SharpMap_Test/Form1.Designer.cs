@@ -39,6 +39,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.richTextBoxPointLayerList = new System.Windows.Forms.RichTextBox();
             this.richTextBoxLineStringLayerList = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mapBox1
@@ -155,11 +156,21 @@
             this.richTextBoxLineStringLayerList.TabIndex = 13;
             this.richTextBoxLineStringLayerList.Text = "";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 524);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(52, 12);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "ヒット判定";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1140, 654);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.richTextBoxLineStringLayerList);
             this.Controls.Add(this.richTextBoxPointLayerList);
             this.Controls.Add(this.button5);
@@ -179,8 +190,6 @@
         }
 
         #endregion
-
-        private SharpMap.Forms.MapBox mapBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
@@ -191,6 +200,8 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.RichTextBox richTextBoxPointLayerList;
         private System.Windows.Forms.RichTextBox richTextBoxLineStringLayerList;
+        public SharpMap.Forms.MapBox mapBox1;
+        private System.Windows.Forms.Label label3;
     }
 }
 

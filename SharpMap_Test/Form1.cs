@@ -35,6 +35,7 @@ namespace SharpMap_Test
             }
         };
         GeomInfo selectedGeom = new GeomInfo(); //選択ジオメトリ
+        GeomInfo selectedGeomPrev = new GeomInfo(); //変更前の選択ジオメトリ
 
         //コンストラクタ
         public Form1()
@@ -187,8 +188,14 @@ namespace SharpMap_Test
             else if (this.radioButtonClickModeSelect.Checked == true)
             {
                 SelectPoint();//点を選択
+                UpdateSelectLayer();//selectLayerレイヤの更新
                 UpdateSelectPointLayer();//selectPointLayerレイヤの更新
-                this.label4.Text = $"[ {this.selectedGeom.index} ] : { this.selectedGeom.igeom.ToString()}";
+
+                if (selectedGeom.igeom != null)
+                {
+                    this.label4.Text = $"[ {this.selectedGeom.index} ] : {this.selectedGeom.igeom.ToString()}";
+                }
+                selectedGeomPrev = selectedGeom;
             }
         }
 
@@ -366,6 +373,11 @@ namespace SharpMap_Test
             {
                 //ヒットした点を選択する
                 selectedGeom.Set(mapBox1, "pointLayer", index, hitIgeome);
+            }//選択していものがない
+            else
+            {
+                //初期化
+                selectedGeom = new GeomInfo();
             }
         }
 
@@ -387,12 +399,57 @@ namespace SharpMap_Test
                 //ジオメトリをレイヤに反映
                 GeometryProvider gpro = new GeometryProvider(igeoms);
                 layer.DataSource = gpro;
-                layer.Style.PointSize = 15f;
+                layer.Style.PointSize = 12f;
                 layer.Style.PointColor = Brushes.Yellow;
                 //レイヤをmapBoxに追加
                 mapBox1.Map.Layers.Add(layer);
                 //mapBoxを再描画
                 mapBox1.Refresh();
+            }//選択していものがない
+            else
+            {
+                //レイヤを削除
+                (new SharpMapHelper()).RemoveLayer(mapBox1, "selectPointLayer");
+            }
+        }
+
+        //selectPointLayerレイヤの更新
+        private void UpdateSelectLayer()
+        {
+            //選択しているものがある
+            if (selectedGeom.igeom != null)
+            {
+                //SharpMap補助クラス
+                SharpMapHelper smh = new SharpMapHelper();
+                //レイヤ取得
+                VectorLayer layer = smh.GetVectorLayerByName(mapBox1, selectedGeom.layername);
+                //Pointの色を変更
+                layer.Style.PointColor = Brushes.BlueViolet;
+                //レイヤのインデックスを取得
+                int index = mapBox1.Map.Layers.IndexOf(layer);
+                //レイヤを更新
+                mapBox1.Map.Layers[index] = layer;
+                //mapBoxを再描画
+                mapBox1.Refresh();
+            }//選択していものがない
+            else
+            {
+                //前回選択したものがある
+                if (selectedGeomPrev.igeom != null)
+                {
+                    //SharpMap補助クラス
+                    SharpMapHelper smh = new SharpMapHelper();
+                    //レイヤ取得
+                    VectorLayer layer = smh.GetVectorLayerByName(mapBox1, selectedGeomPrev.layername);
+                    //Pointの色を変更
+                    layer.Style.PointColor = Brushes.Red;
+                    //レイヤのインデックスを取得
+                    int index = mapBox1.Map.Layers.IndexOf(layer);
+                    //レイヤを更新
+                    mapBox1.Map.Layers[index] = layer;
+                    //mapBoxを再描画
+                    mapBox1.Refresh();
+                }
             }
         }
 

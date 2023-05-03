@@ -84,7 +84,7 @@ namespace SharpMap_Test
         /// <param name="mapBox"></param>
         public void ViewWholeMap(MapBox mapBox)
         {
-            //レイヤ全体を表示する(全レイヤの範囲にズームする)
+            //レイヤ全体を表示する(全レイヤの      範囲にズームする)
             mapBox.Map.ZoomToExtents();
             //mapBoxを再描画
             mapBox.Refresh();

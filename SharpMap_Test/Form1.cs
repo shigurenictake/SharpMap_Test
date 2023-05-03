@@ -14,10 +14,27 @@ namespace SharpMap_Test
 {
     public partial class Form1 : Form
     {
-        //構造体
         //クラス変数
-        Coordinate g_worldPos = new Coordinate();
-        System.Drawing.Point g_imagePos = new System.Drawing.Point();
+        Coordinate g_worldPos = new Coordinate();                       //地理座標
+        System.Drawing.Point g_imagePos = new System.Drawing.Point();   //ピクセル座標
+
+        //ジオメトリ情報格納用
+        struct GeomInfo
+        {
+            public MapBox mapbox;     //MapBoxオブジェクト
+            public string layername;  //レイヤ名
+            public int index;      //インデックス
+            public IGeometry igeom;      //ジオメトリ
+            //セット関数
+            public void Set(MapBox mb, string ln, int id, IGeometry ig)
+            {
+                this.mapbox = mb;
+                this.layername = ln;
+                this.index = id;
+                this.igeom = ig;
+            }
+        };
+        GeomInfo selectedGeom = new GeomInfo(); //選択ジオメトリ
 
         //コンストラクタ
         public Form1()
@@ -31,9 +48,14 @@ namespace SharpMap_Test
         //マップ初期化
         private void InitializeMap()
         {
+            //baseLayerレイヤ初期化
             this.InitializeBaseLayer();
-            this.InitializePointLayer();
-            this.InitializeLineStringLayer();
+
+            //レイヤ初期化
+            this.InitializeLayer("pointLayer");         //pointレイヤ初期化
+            this.InitializeLayer("lineStringLayer");    //lineStringレイヤ初期化
+
+            //テスト用
             this.InitializeTestLayer();
             this.InitializeTest2Layer();
 
@@ -69,38 +91,13 @@ namespace SharpMap_Test
             mapBox1.Map.Layers.Add(baseLayer);
         }
 
-        //pointレイヤ初期化
-        private void InitializePointLayer()
+        //レイヤ初期化
+        private void InitializeLayer(string layername)
         {
             //レイヤ生成
-            VectorLayer layer = new VectorLayer("pointLayer");
+            VectorLayer layer = new VectorLayer(layername);
             //ジオメトリ生成
             List<IGeometry> igeoms = new List<IGeometry>();
-            /*
-            //点をジオメトリに追加
-            GeometryFactory gf = new GeometryFactory();
-            igeoms.Add(gf.CreatePoint(new Coordinate(135, 35)));
-            */
-            //ジオメトリをレイヤに反映
-            GeometryProvider gpro = new GeometryProvider(igeoms);
-            layer.DataSource = gpro;
-            //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(layer);
-        }
-
-        //LineStringレイヤ初期化
-        private void InitializeLineStringLayer()
-        {
-            //レイヤ生成
-            VectorLayer layer = new VectorLayer("lineStringLayer");
-            //ジオメトリ生成
-            List<IGeometry> igeoms = new List<IGeometry>();
-            /*
-            //線をジオメトリに追加
-            GeometryFactory gf = new GeometryFactory();
-            Coordinate[] linePos = { new Coordinate(135, 30), new Coordinate(135, 37) };
-            eomColl.Add(gf.CreateLineString(linePos));
-            */
             //ジオメトリをレイヤに反映
             GeometryProvider gpro = new GeometryProvider(igeoms);
             layer.DataSource = gpro;
@@ -160,7 +157,7 @@ namespace SharpMap_Test
             GeometryProvider ypvpro = new GeometryProvider(ypeomColl);
             test2Layer.DataSource = ypvpro;
             //点の色を指定
-            test2Layer.Style.PointColor = Brushes.Yellow;
+            test2Layer.Style.PointColor = Brushes.YellowGreen;
 
             //レイヤをmapBoxに追加
             mapBox1.Map.Layers.Add(test2Layer);
@@ -181,8 +178,18 @@ namespace SharpMap_Test
         //イベント - 地図上でクリック
         private void mapBox1_Click(object sender, EventArgs e)
         {
-            UpdatePointLayer();//pointLayerレイヤの更新
-            UpdateLineStringLayer();//pointLayerレイヤの更新
+            //クリックモード == 点を描く
+            if (this.radioButtonClickModeDraw.Checked == true)
+            {
+                UpdatePointLayer();//pointLayerレイヤの更新
+                UpdateLineStringLayer();//lineStringLayerレイヤの更新
+            }//クリックモード == 点を選択する
+            else if (this.radioButtonClickModeSelect.Checked == true)
+            {
+                SelectPoint();//点を選択
+                UpdateSelectPointLayer();//selectPointLayerレイヤの更新
+                this.label4.Text = $"[ {this.selectedGeom.index} ] : { this.selectedGeom.igeom.ToString()}";
+            }
         }
 
         //イベント - button1クリック
@@ -243,7 +250,7 @@ namespace SharpMap_Test
             //いずれかのPointと衝突しているか判定
             IGeometry hitIgeome = null;
             int index = new int();
-            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref hitIgeome, ref index, mapBox1, "pointLayer", g_worldPos);
+            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox1, "pointLayer", g_worldPos);
             if (ishit == true)
             {
                 string txt = $"ヒットしました : [ {index} ] : " + hitIgeome.ToString();
@@ -271,10 +278,10 @@ namespace SharpMap_Test
             //ジオメトリをレイヤに反映
             GeometryProvider gpro = new GeometryProvider(igeoms);
             layer.DataSource = gpro;
-            //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(layer);
-            //レイヤを削除
-            mapBox1.Map.Layers.Remove(layer);
+            //レイヤのインデックスを取得
+            int index = mapBox1.Map.Layers.IndexOf(layer);
+            //レイヤを更新
+            mapBox1.Map.Layers[index] = layer;
             //mapBoxを再描画
             mapBox1.Refresh();
         }
@@ -285,7 +292,7 @@ namespace SharpMap_Test
             //pointLayerから最後の2点を取得
             Coordinate[] linePos = GetRecently2Points("pointLayer");
 
-            if ( (linePos[0] != null) && (linePos[1] != null))
+            if ((linePos[0] != null) && (linePos[1] != null))
             {
                 //SharpMap補助クラス
                 SharpMapHelper smh = new SharpMapHelper();
@@ -305,10 +312,11 @@ namespace SharpMap_Test
                 //ジオメトリをレイヤに反映
                 GeometryProvider gpro = new GeometryProvider(igeoms);
                 layer.DataSource = gpro;
-                //レイヤをmapBoxに追加
-                mapBox1.Map.Layers.Add(layer);
-                //レイヤを削除
-                mapBox1.Map.Layers.Remove(layer);
+
+                //レイヤのインデックスを取得
+                int index = mapBox1.Map.Layers.IndexOf(layer);
+                //レイヤを更新
+                mapBox1.Map.Layers[index] = layer;
                 //mapBoxを再描画
                 mapBox1.Refresh();
             }
@@ -342,9 +350,50 @@ namespace SharpMap_Test
             if (cnt >= 2) {
                 linePos[0] = pointIgeoms[cnt - 2].Coordinate;
                 linePos[1] = pointIgeoms[cnt - 1].Coordinate;
-            } 
+            }
 
             return linePos;
+        }
+
+        //点を選択する
+        private void SelectPoint()
+        {
+            //いずれかのPointと衝突しているか判定
+            IGeometry hitIgeome = null;
+            int index = new int();
+            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox1, "pointLayer", g_worldPos);
+            if (ishit == true)
+            {
+                //ヒットした点を選択する
+                selectedGeom.Set(mapBox1, "pointLayer", index, hitIgeome);
+            }
+        }
+
+        //selectPointLayerレイヤの更新
+        private void UpdateSelectPointLayer()
+        {
+            if (selectedGeom.igeom != null)
+            {
+                //レイヤを削除
+                (new SharpMapHelper()).RemoveLayer(mapBox1, "selectPointLayer");
+
+                //レイヤ生成
+                VectorLayer layer = new VectorLayer("selectPointLayer");
+                //ジオメトリ生成
+                Collection<IGeometry> igeoms = new Collection<IGeometry>();
+                //点をジオメトリに追加
+                GeometryFactory gf = new GeometryFactory();
+                igeoms.Add(gf.CreatePoint(selectedGeom.igeom.Coordinate));
+                //ジオメトリをレイヤに反映
+                GeometryProvider gpro = new GeometryProvider(igeoms);
+                layer.DataSource = gpro;
+                layer.Style.PointSize = 15f;
+                layer.Style.PointColor = Brushes.Yellow;
+                //レイヤをmapBoxに追加
+                mapBox1.Map.Layers.Add(layer);
+                //mapBoxを再描画
+                mapBox1.Refresh();
+            }
         }
 
         //testLayerレイヤーの更新
@@ -439,8 +488,11 @@ namespace SharpMap_Test
                 mapBox.Map.Layers.RemoveAt((mapBox.Map.Layers.Count - 1));
             }
             //ベース以外のレイヤ初期化
-            this.InitializePointLayer();
-            this.InitializeLineStringLayer();
+            this.InitializeLayer("pointLayer");
+            this.InitializeLayer("lineStringLayer");
+
+            this.selectedGeom = new GeomInfo();
+
             //mapBoxを再描画
             mapBox.Refresh();
         }

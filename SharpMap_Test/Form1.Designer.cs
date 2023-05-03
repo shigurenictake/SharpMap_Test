@@ -40,6 +40,11 @@
             this.richTextBoxPointLayerList = new System.Windows.Forms.RichTextBox();
             this.richTextBoxLineStringLayerList = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
+            this.radioButtonClickModeSelect = new System.Windows.Forms.RadioButton();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mapBox1
@@ -165,11 +170,55 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "ヒット判定";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButtonClickModeSelect);
+            this.groupBox1.Controls.Add(this.radioButtonClickModeDraw);
+            this.groupBox1.Location = new System.Drawing.Point(483, 457);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(129, 94);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "クリックモード";
+            // 
+            // radioButtonClickModeDraw
+            // 
+            this.radioButtonClickModeDraw.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonClickModeDraw.AutoSize = true;
+            this.radioButtonClickModeDraw.Location = new System.Drawing.Point(19, 24);
+            this.radioButtonClickModeDraw.Name = "radioButtonClickModeDraw";
+            this.radioButtonClickModeDraw.Size = new System.Drawing.Size(54, 22);
+            this.radioButtonClickModeDraw.TabIndex = 0;
+            this.radioButtonClickModeDraw.Text = "点を描く";
+            this.radioButtonClickModeDraw.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonClickModeSelect
+            // 
+            this.radioButtonClickModeSelect.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonClickModeSelect.AutoSize = true;
+            this.radioButtonClickModeSelect.Location = new System.Drawing.Point(19, 52);
+            this.radioButtonClickModeSelect.Name = "radioButtonClickModeSelect";
+            this.radioButtonClickModeSelect.Size = new System.Drawing.Size(79, 22);
+            this.radioButtonClickModeSelect.TabIndex = 1;
+            this.radioButtonClickModeSelect.Text = "点を選択する";
+            this.radioButtonClickModeSelect.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(483, 568);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "選択判定";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1140, 654);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.richTextBoxLineStringLayerList);
             this.Controls.Add(this.richTextBoxPointLayerList);
@@ -184,6 +233,8 @@
             this.Controls.Add(this.mapBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,6 +253,10 @@
         private System.Windows.Forms.RichTextBox richTextBoxLineStringLayerList;
         public SharpMap.Forms.MapBox mapBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButtonClickModeSelect;
+        private System.Windows.Forms.RadioButton radioButtonClickModeDraw;
+        private System.Windows.Forms.Label label4;
     }
 }
 

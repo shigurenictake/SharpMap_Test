@@ -93,15 +93,15 @@ namespace SharpMap_Test
         /// <summary>
         /// いずれかのPointと衝突しているか判定
         /// </summary>
-        /// <param name="rHitIgeome"></param>
         /// <param name="rIndex"></param>
+        /// <param name="rHitIgeome"></param>
         /// <param name="mapbox"></param>
         /// <param name="layername"></param>
         /// <param name="nowWorldPos"></param>
         /// <returns></returns>
         public bool CheckHitAnyPoints(
-            ref IGeometry rHitIgeome, 
             ref int rIndex,
+            ref IGeometry rHitIgeome, 
             MapBox mapbox, 
             string layername, 
             Coordinate nowWorldPos
@@ -113,49 +113,48 @@ namespace SharpMap_Test
             //ジオメトリ取得
             Collection<IGeometry> igeoms = this.GetIGeometrysAll(layer);
 
-            //レイヤ内の全ジオメトリの中からPointのみを抽出
-            Collection<IGeometry> pointIgeoms = new Collection<IGeometry>();
+            //座標を取得ピクセル座標に変換
+            System.Drawing.PointF nowImagePos = mapbox.Map.WorldToImage(nowWorldPos);
+
+            //レイヤ内の全ジオメトリの中から衝突するPointを探す
+            int index = 0;
+            IGeometry hitIgeome = null;
+            bool ret = false;
             foreach (IGeometry igeom in igeoms)
             {
                 if (igeom.GeometryType == "Point")
-                {
-                    pointIgeoms.Add(igeom);
-                }
-            }
-
-            //PointがあるならばPointジオメトリリストを順にチェックする
-            IGeometry hitIgeome = null;
-            int index = -1;
-            bool ret = false;
-            if (pointIgeoms.Count >= 1)
-            {
-                //座標を取得ピクセル座標に変換
-                System.Drawing.PointF nowImagePos = mapbox.Map.WorldToImage(nowWorldPos);
-
-                index = 0;
-                foreach (IGeometry igeom in pointIgeoms)
                 {
                     //座標を取得ピクセル座標に変換
                     System.Drawing.PointF pointImagePos = mapbox.Map.WorldToImage(igeom.Coordinate);
 
                     //衝突するかチェック
-                    if (Distance(nowImagePos, pointImagePos) < 5.0 )
+                    if (Distance(nowImagePos, pointImagePos) < 5.0)
                     {
                         //衝突したジオメトリを取得して、ループを抜ける
                         hitIgeome = igeom;
                         ret = true;
                         break;
                     }
-                    index++;
                 }
+                index++;
             }
 
-            rHitIgeome = hitIgeome;
+            if(ret == false)
+            {
+                index = -1;
+            }
+
             rIndex = index;
+            rHitIgeome = hitIgeome;
             return ret;
         }
 
-        //2点間の距離
+        /// <summary>
+        /// 2点間の距離
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public double Distance(System.Drawing.PointF a, System.Drawing.PointF b)
         {
             return ( Math.Sqrt( (Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2)) ) );

@@ -38,11 +38,10 @@
             this.richTextBoxLayerList = new System.Windows.Forms.RichTextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.richTextBoxPointLayerList = new System.Windows.Forms.RichTextBox();
-            this.richTextBoxLineStringLayerList = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.radioButtonClickModeSelect = new System.Windows.Forms.RadioButton();
+            this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -149,17 +148,9 @@
             // 
             this.richTextBoxPointLayerList.Location = new System.Drawing.Point(795, 194);
             this.richTextBoxPointLayerList.Name = "richTextBoxPointLayerList";
-            this.richTextBoxPointLayerList.Size = new System.Drawing.Size(333, 96);
+            this.richTextBoxPointLayerList.Size = new System.Drawing.Size(333, 210);
             this.richTextBoxPointLayerList.TabIndex = 11;
             this.richTextBoxPointLayerList.Text = "";
-            // 
-            // richTextBoxLineStringLayerList
-            // 
-            this.richTextBoxLineStringLayerList.Location = new System.Drawing.Point(794, 296);
-            this.richTextBoxLineStringLayerList.Name = "richTextBoxLineStringLayerList";
-            this.richTextBoxLineStringLayerList.Size = new System.Drawing.Size(333, 96);
-            this.richTextBoxLineStringLayerList.TabIndex = 13;
-            this.richTextBoxLineStringLayerList.Text = "";
             // 
             // label3
             // 
@@ -181,17 +172,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "クリックモード";
             // 
-            // radioButtonClickModeDraw
-            // 
-            this.radioButtonClickModeDraw.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonClickModeDraw.AutoSize = true;
-            this.radioButtonClickModeDraw.Location = new System.Drawing.Point(19, 24);
-            this.radioButtonClickModeDraw.Name = "radioButtonClickModeDraw";
-            this.radioButtonClickModeDraw.Size = new System.Drawing.Size(54, 22);
-            this.radioButtonClickModeDraw.TabIndex = 0;
-            this.radioButtonClickModeDraw.Text = "点を描く";
-            this.radioButtonClickModeDraw.UseVisualStyleBackColor = true;
-            // 
             // radioButtonClickModeSelect
             // 
             this.radioButtonClickModeSelect.Appearance = System.Windows.Forms.Appearance.Button;
@@ -202,6 +182,17 @@
             this.radioButtonClickModeSelect.TabIndex = 1;
             this.radioButtonClickModeSelect.Text = "点を選択する";
             this.radioButtonClickModeSelect.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonClickModeDraw
+            // 
+            this.radioButtonClickModeDraw.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonClickModeDraw.AutoSize = true;
+            this.radioButtonClickModeDraw.Location = new System.Drawing.Point(19, 24);
+            this.radioButtonClickModeDraw.Name = "radioButtonClickModeDraw";
+            this.radioButtonClickModeDraw.Size = new System.Drawing.Size(54, 22);
+            this.radioButtonClickModeDraw.TabIndex = 0;
+            this.radioButtonClickModeDraw.Text = "点を描く";
+            this.radioButtonClickModeDraw.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -220,7 +211,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.richTextBoxLineStringLayerList);
             this.Controls.Add(this.richTextBoxPointLayerList);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.richTextBoxLayerList);
@@ -250,7 +240,6 @@
         private System.Windows.Forms.RichTextBox richTextBoxLayerList;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.RichTextBox richTextBoxPointLayerList;
-        private System.Windows.Forms.RichTextBox richTextBoxLineStringLayerList;
         public SharpMap.Forms.MapBox mapBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;

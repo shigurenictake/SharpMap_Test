@@ -128,7 +128,7 @@ namespace SharpMap_Test
                     System.Drawing.PointF pointImagePos = mapbox.Map.WorldToImage(igeom.Coordinate);
 
                     //衝突するかチェック
-                    if (Distance(nowImagePos, pointImagePos) < 5.0)
+                    if (Distance(nowImagePos, pointImagePos) <= 6.0)
                     {
                         //衝突したジオメトリを取得して、ループを抜ける
                         hitIgeome = igeom;

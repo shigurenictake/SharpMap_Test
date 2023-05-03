@@ -190,7 +190,6 @@ namespace SharpMap_Test
             {
                 SelectPoint();//点を選択
                 UpdateSelectLayer();//selectLayerレイヤの更新
-                UpdateSelectPointLayer();//selectPointLayerレイヤの更新
 
                 //選択したものがある
                 if (selectedGeom.igeom != null)
@@ -385,38 +384,6 @@ namespace SharpMap_Test
             {
                 //初期化
                 selectedGeom = new GeomInfo();
-            }
-        }
-
-        //selectPointLayerレイヤの更新
-        private void UpdateSelectPointLayer()
-        {
-            if (selectedGeom.igeom != null)
-            {
-                //レイヤを削除
-                (new SharpMapHelper()).RemoveLayer(mapBox1, "selectPointLayer");
-
-                //レイヤ生成
-                VectorLayer layer = new VectorLayer("selectPointLayer");
-                //ジオメトリ生成
-                Collection<IGeometry> igeoms = new Collection<IGeometry>();
-                //点をジオメトリに追加
-                GeometryFactory gf = new GeometryFactory();
-                igeoms.Add(gf.CreatePoint(selectedGeom.igeom.Coordinate));
-                //ジオメトリをレイヤに反映
-                GeometryProvider gpro = new GeometryProvider(igeoms);
-                layer.DataSource = gpro;
-                layer.Style.PointSize = 12f;
-                layer.Style.PointColor = Brushes.Yellow;
-                //レイヤをmapBoxに追加
-                mapBox1.Map.Layers.Add(layer);
-                //mapBoxを再描画
-                mapBox1.Refresh();
-            }//選択していものがない
-            else
-            {
-                //レイヤを削除
-                (new SharpMapHelper()).RemoveLayer(mapBox1, "selectPointLayer");
             }
         }
 

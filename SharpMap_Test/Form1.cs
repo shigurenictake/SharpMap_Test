@@ -177,7 +177,7 @@ namespace SharpMap_Test
             CollisionsWithPoints();//点との衝突
         }
 
-        //イベント - 地図上でクリック
+        //イベント - 地図上でクリック(ボタンを離した時)
         private void mapBox1_Click(object sender, EventArgs e)
         {
             //クリックモード == 点を描く
@@ -185,8 +185,10 @@ namespace SharpMap_Test
             {
                 UpdatePointLayer();//pointLineLayerレイヤの更新
                 UpdateLineStringLayer();//pointLineLayerレイヤの更新
-            }//クリックモード == 点を選択する
-            else if (this.radioButtonClickModeSelect.Checked == true)
+            }
+            
+            //クリックモード == 点を選択する
+            if (this.radioButtonClickModeSelect.Checked == true)
             {
                 SelectPoint();//点を選択
                 UpdateSelectLayer();//selectLayerレイヤの更新
@@ -194,7 +196,7 @@ namespace SharpMap_Test
                 //選択したものがある
                 if (selectedGeom.igeom != null)
                 {
-                    this.label4.Text = $"[ {this.selectedGeom.index} ] : {this.selectedGeom.igeom.ToString()}";
+                    this.label4.Text = $"{selectedGeom.layername} : [ {selectedGeom.index} ] : {selectedGeom.igeom}";
                 }//選択したものがない
                 else
                 {
@@ -248,8 +250,7 @@ namespace SharpMap_Test
         //画面上のピクセル座標の更新
         private void UpdateImagePos(MouseEventArgs imagePos)
         {
-            g_imagePos.X = imagePos.X;
-            g_imagePos.Y = imagePos.Y;
+            g_imagePos = imagePos.Location;
 
             //変換テスト
             this.label2.Text = g_imagePos + "\n" +

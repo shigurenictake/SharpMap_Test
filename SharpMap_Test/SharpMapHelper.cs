@@ -113,7 +113,7 @@ namespace SharpMap_Test
             //ジオメトリ取得
             Collection<IGeometry> igeoms = this.GetIGeometrysAll(layer);
 
-            //座標を取得ピクセル座標に変換
+            //座標を取得し、ピクセル座標に変換
             System.Drawing.PointF nowImagePos = mapbox.Map.WorldToImage(nowWorldPos);
 
             //レイヤ内の全ジオメトリの中から衝突するPointを探す
@@ -124,7 +124,7 @@ namespace SharpMap_Test
             {
                 if (igeom.GeometryType == "Point")
                 {
-                    //座標を取得ピクセル座標に変換
+                    //地理座標をピクセル座標に変換
                     System.Drawing.PointF pointImagePos = mapbox.Map.WorldToImage(igeom.Coordinate);
 
                     //衝突するかチェック

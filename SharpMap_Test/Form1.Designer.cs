@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mapBox1 = new SharpMap.Forms.MapBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -43,6 +44,7 @@
             this.radioButtonClickModeSelect = new System.Windows.Forms.RadioButton();
             this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
+            this.mapZoomToolStrip1 = new SharpMap.Forms.ToolBar.MapZoomToolStrip(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +55,7 @@
             this.mapBox1.Cursor = System.Windows.Forms.Cursors.Default;
             this.mapBox1.CustomTool = null;
             this.mapBox1.FineZoomFactor = 10D;
-            this.mapBox1.Location = new System.Drawing.Point(12, 12);
+            this.mapBox1.Location = new System.Drawing.Point(12, 41);
             this.mapBox1.MapQueryMode = SharpMap.Forms.MapBox.MapQueryType.LayerByIndex;
             this.mapBox1.Name = "mapBox1";
             this.mapBox1.QueryGrowFactor = 5F;
@@ -61,7 +63,7 @@
             this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.mapBox1.ShowProgressUpdate = false;
-            this.mapBox1.Size = new System.Drawing.Size(776, 425);
+            this.mapBox1.Size = new System.Drawing.Size(776, 396);
             this.mapBox1.TabIndex = 0;
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = -2D;
@@ -118,7 +120,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(794, 12);
+            this.button4.Location = new System.Drawing.Point(794, 41);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(152, 23);
             this.button4.TabIndex = 8;
@@ -128,7 +130,7 @@
             // 
             // richTextBoxLayerList
             // 
-            this.richTextBoxLayerList.Location = new System.Drawing.Point(794, 41);
+            this.richTextBoxLayerList.Location = new System.Drawing.Point(795, 74);
             this.richTextBoxLayerList.Name = "richTextBoxLayerList";
             this.richTextBoxLayerList.Size = new System.Drawing.Size(334, 96);
             this.richTextBoxLayerList.TabIndex = 9;
@@ -136,7 +138,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(795, 143);
+            this.button5.Location = new System.Drawing.Point(794, 176);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(151, 45);
             this.button5.TabIndex = 10;
@@ -146,7 +148,7 @@
             // 
             // richTextBoxPointLayerList
             // 
-            this.richTextBoxPointLayerList.Location = new System.Drawing.Point(795, 194);
+            this.richTextBoxPointLayerList.Location = new System.Drawing.Point(795, 227);
             this.richTextBoxPointLayerList.Name = "richTextBoxPointLayerList";
             this.richTextBoxPointLayerList.Size = new System.Drawing.Size(333, 210);
             this.richTextBoxPointLayerList.TabIndex = 11;
@@ -203,11 +205,22 @@
             this.label4.TabIndex = 17;
             this.label4.Text = "選択判定";
             // 
+            // mapZoomToolStrip1
+            // 
+            this.mapZoomToolStrip1.Enabled = false;
+            this.mapZoomToolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.mapZoomToolStrip1.MapControl = this.mapBox1;
+            this.mapZoomToolStrip1.Name = "mapZoomToolStrip1";
+            this.mapZoomToolStrip1.Size = new System.Drawing.Size(1140, 25);
+            this.mapZoomToolStrip1.TabIndex = 18;
+            this.mapZoomToolStrip1.Text = "mapZoomToolStrip1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1140, 654);
+            this.Controls.Add(this.mapZoomToolStrip1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
@@ -246,6 +259,7 @@
         private System.Windows.Forms.RadioButton radioButtonClickModeSelect;
         private System.Windows.Forms.RadioButton radioButtonClickModeDraw;
         private System.Windows.Forms.Label label4;
+        private SharpMap.Forms.ToolBar.MapZoomToolStrip mapZoomToolStrip1;
     }
 }
 

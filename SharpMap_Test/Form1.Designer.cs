@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.mapBox1 = new SharpMap.Forms.MapBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -41,10 +40,10 @@
             this.richTextBoxPointLayerList = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonClickModePan = new System.Windows.Forms.RadioButton();
             this.radioButtonClickModeSelect = new System.Windows.Forms.RadioButton();
             this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
-            this.mapZoomToolStrip1 = new SharpMap.Forms.ToolBar.MapZoomToolStrip(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,6 +67,8 @@
             this.mapBox1.Text = "mapBox1";
             this.mapBox1.WheelZoomMagnitude = -2D;
             this.mapBox1.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseMove);
+            this.mapBox1.MouseDown += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseDown);
+            this.mapBox1.MouseUp += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseUp);
             this.mapBox1.Click += new System.EventHandler(this.mapBox1_Click);
             // 
             // label2
@@ -95,7 +96,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(152, 23);
             this.button2.TabIndex = 4;
-            this.button2.Text = "testレイヤーの更新";
+            this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -165,33 +166,44 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.radioButtonClickModePan);
             this.groupBox1.Controls.Add(this.radioButtonClickModeSelect);
             this.groupBox1.Controls.Add(this.radioButtonClickModeDraw);
             this.groupBox1.Location = new System.Drawing.Point(483, 457);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(129, 94);
+            this.groupBox1.Size = new System.Drawing.Size(129, 126);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "クリックモード";
             // 
+            // radioButtonClickModePan
+            // 
+            this.radioButtonClickModePan.AutoSize = true;
+            this.radioButtonClickModePan.Location = new System.Drawing.Point(19, 81);
+            this.radioButtonClickModePan.Name = "radioButtonClickModePan";
+            this.radioButtonClickModePan.Size = new System.Drawing.Size(42, 16);
+            this.radioButtonClickModePan.TabIndex = 2;
+            this.radioButtonClickModePan.TabStop = true;
+            this.radioButtonClickModePan.Text = "パン";
+            this.radioButtonClickModePan.UseVisualStyleBackColor = true;
+            this.radioButtonClickModePan.CheckedChanged += new System.EventHandler(this.radioButtonClickModePan_CheckedChanged);
+            // 
             // radioButtonClickModeSelect
             // 
-            this.radioButtonClickModeSelect.Appearance = System.Windows.Forms.Appearance.Button;
             this.radioButtonClickModeSelect.AutoSize = true;
             this.radioButtonClickModeSelect.Location = new System.Drawing.Point(19, 52);
             this.radioButtonClickModeSelect.Name = "radioButtonClickModeSelect";
-            this.radioButtonClickModeSelect.Size = new System.Drawing.Size(79, 22);
+            this.radioButtonClickModeSelect.Size = new System.Drawing.Size(87, 16);
             this.radioButtonClickModeSelect.TabIndex = 1;
             this.radioButtonClickModeSelect.Text = "点を選択する";
             this.radioButtonClickModeSelect.UseVisualStyleBackColor = true;
             // 
             // radioButtonClickModeDraw
             // 
-            this.radioButtonClickModeDraw.Appearance = System.Windows.Forms.Appearance.Button;
             this.radioButtonClickModeDraw.AutoSize = true;
             this.radioButtonClickModeDraw.Location = new System.Drawing.Point(19, 24);
             this.radioButtonClickModeDraw.Name = "radioButtonClickModeDraw";
-            this.radioButtonClickModeDraw.Size = new System.Drawing.Size(54, 22);
+            this.radioButtonClickModeDraw.Size = new System.Drawing.Size(62, 16);
             this.radioButtonClickModeDraw.TabIndex = 0;
             this.radioButtonClickModeDraw.Text = "点を描く";
             this.radioButtonClickModeDraw.UseVisualStyleBackColor = true;
@@ -199,28 +211,17 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(483, 568);
+            this.label4.Location = new System.Drawing.Point(481, 596);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 17;
             this.label4.Text = "選択判定";
-            // 
-            // mapZoomToolStrip1
-            // 
-            this.mapZoomToolStrip1.Enabled = false;
-            this.mapZoomToolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.mapZoomToolStrip1.MapControl = this.mapBox1;
-            this.mapZoomToolStrip1.Name = "mapZoomToolStrip1";
-            this.mapZoomToolStrip1.Size = new System.Drawing.Size(1140, 25);
-            this.mapZoomToolStrip1.TabIndex = 18;
-            this.mapZoomToolStrip1.Text = "mapZoomToolStrip1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1140, 654);
-            this.Controls.Add(this.mapZoomToolStrip1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
@@ -259,7 +260,7 @@
         private System.Windows.Forms.RadioButton radioButtonClickModeSelect;
         private System.Windows.Forms.RadioButton radioButtonClickModeDraw;
         private System.Windows.Forms.Label label4;
-        private SharpMap.Forms.ToolBar.MapZoomToolStrip mapZoomToolStrip1;
+        private System.Windows.Forms.RadioButton radioButtonClickModePan;
     }
 }
 

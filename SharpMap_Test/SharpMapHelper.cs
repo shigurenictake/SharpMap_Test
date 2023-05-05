@@ -84,7 +84,7 @@ namespace SharpMap_Test
         /// <param name="mapBox"></param>
         public void ViewWholeMap(MapBox mapBox)
         {
-            //レイヤ全体を表示する(全レイヤの      範囲にズームする)
+            //レイヤ全体を表示する(全レイヤの範囲にズームする)
             mapBox.Map.ZoomToExtents();
             //mapBoxを再描画
             mapBox.Refresh();
@@ -113,7 +113,7 @@ namespace SharpMap_Test
             //ジオメトリ取得
             Collection<IGeometry> igeoms = this.GetIGeometrysAll(layer);
 
-            //座標を取得し、ピクセル座標に変換
+            //座標を取得し、イメージ座標に変換
             System.Drawing.PointF nowImagePos = mapbox.Map.WorldToImage(nowWorldPos);
 
             //レイヤ内の全ジオメトリの中から衝突するPointを探す
@@ -124,7 +124,7 @@ namespace SharpMap_Test
             {
                 if (igeom.GeometryType == "Point")
                 {
-                    //地理座標をピクセル座標に変換
+                    //地理座標をイメージ座標に変換
                     System.Drawing.PointF pointImagePos = mapbox.Map.WorldToImage(igeom.Coordinate);
 
                     //衝突するかチェック
@@ -139,7 +139,8 @@ namespace SharpMap_Test
                 index++;
             }
 
-            if(ret == false)
+            //該当するジオメトリがなければindexを-1(無効値)にする
+            if (ret == false)
             {
                 index = -1;
             }

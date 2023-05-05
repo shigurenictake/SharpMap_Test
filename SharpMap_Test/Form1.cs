@@ -56,7 +56,7 @@ namespace SharpMap_Test
             this.InitializeBaseLayer();
 
             //レイヤ初期化
-            this.InitializePointLineLayer();         //pointLineLayerレイヤ初期化
+            this.InitializePointLineLayer();
 
             //Zoom制限
             mapBox1.Map.MinimumZoom = 0.1;
@@ -82,7 +82,6 @@ namespace SharpMap_Test
             //baseLayer.DataSource = new ShapeFile(@"..\..\ShapeFiles\ne_10m_coastline\ne_10m_coastline.shp");
 
             baseLayer.Style.Fill = Brushes.LimeGreen;
-            //baseLayer.Style.Fill = new SolidBrush(Color.LimeGreen);
             baseLayer.Style.Outline = Pens.Black;
             baseLayer.Style.EnableOutline = true;
 
@@ -318,7 +317,6 @@ namespace SharpMap_Test
                 mapBox1.Refresh();
             }
         }
-        
 
         /// <summary>
         /// 指定レイヤから最近の2つのポイントを取得する

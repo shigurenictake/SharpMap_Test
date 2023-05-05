@@ -129,7 +129,7 @@ namespace SharpMap_Test
             //クリックモード == 点を選択する
             if (this.radioButtonClickModeSelect.Checked == true)
             {
-                SelectPoint();//pointLineLayerレイヤの点を選択する
+                SelectPoint("pointLineLayer");//pointLineLayerレイヤの点を選択する
                 UpdateSelectLayer();//選択ジオメトリのレイヤを更新
 
                 //選択したものがあるならばラベルに表示
@@ -351,18 +351,18 @@ namespace SharpMap_Test
             return linePos;
         }
 
-        //pointLineLayerレイヤの点を選択する
-        private void SelectPoint()
+        //指定レイヤ内で、マウスカーソルに当たるPointがあれば、そのPointを選択ジオメトリにセットする
+        private void SelectPoint(string layername)
         {
             //いずれかのPointと衝突しているか判定
             IGeometry hitIgeome = null;
             int index = new int();
-            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox1, "pointLineLayer", g_worldPos);
+            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox1, layername, g_worldPos);
             if (ishit == true)
             {
-                //ヒットした点を選択する
-                g_selectedGeom.Set(mapBox1, "pointLineLayer", index, hitIgeome);
-            }//選択していものがない
+                //ヒットしたPointを選択ジオメトリにセットする
+                g_selectedGeom.Set(mapBox1, layername, index, hitIgeome);
+            }//マウスカーソルに衝突するPointがないならば、選択ジオメトリを初期化
             else
             {
                 //初期化

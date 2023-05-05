@@ -123,9 +123,9 @@
             // 
             this.button4.Location = new System.Drawing.Point(794, 41);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(152, 23);
+            this.button4.Size = new System.Drawing.Size(199, 23);
             this.button4.TabIndex = 8;
-            this.button4.Text = "レイヤ一覧更新";
+            this.button4.Text = "mapBox1のレイヤ一覧　更新";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -141,9 +141,9 @@
             // 
             this.button5.Location = new System.Drawing.Point(794, 176);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(151, 45);
+            this.button5.Size = new System.Drawing.Size(199, 45);
             this.button5.TabIndex = 10;
-            this.button5.Text = "pointLayerの一覧更新\r\nlineStringLayerの一覧更新";
+            this.button5.Text = "pointLayerの一覧　更新\r\nlineStringLayerの一覧　更新";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 

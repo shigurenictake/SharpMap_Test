@@ -40,6 +40,8 @@ namespace SharpMap_Test
 
         private System.Drawing.Point g_mouseDownImagePos = new System.Drawing.Point();   //マウスを押した瞬間のイメージ座標
 
+        TrackListGenerator trackListGenerator = new TrackListGenerator();
+
         //コンストラクタ
         public Form1()
         {
@@ -47,6 +49,8 @@ namespace SharpMap_Test
 
             //SharpMap初期化
             this.InitializeMap();
+
+            trackListGenerator.Generate();
         }
 
         //マップ初期化

@@ -109,6 +109,9 @@ namespace SharpMap_Test
                     //点と線を描画
                     refForm1.AddPointToLayer(layername, wpos);
                     refForm1.AddLineConnectLast2PointsToLayer(layername);
+                    refForm1.SetLineDash(layername);
+                    refForm1.SetLineArrow(layername);
+                    refForm1.SetPointOutLine(layername);
                 }
                 Console.WriteLine();
             }

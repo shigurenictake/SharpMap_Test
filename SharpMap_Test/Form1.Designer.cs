@@ -44,7 +44,9 @@
             this.radioButtonClickModeSelect = new System.Windows.Forms.RadioButton();
             this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
+            this.picbox = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picbox)).BeginInit();
             this.SuspendLayout();
             // 
             // mapBox1
@@ -217,6 +219,15 @@
             this.label4.TabIndex = 17;
             this.label4.Text = "選択判定";
             // 
+            // picbox
+            // 
+            this.picbox.BackColor = System.Drawing.Color.Transparent;
+            this.picbox.Location = new System.Drawing.Point(132, 100);
+            this.picbox.Name = "picbox";
+            this.picbox.Size = new System.Drawing.Size(536, 286);
+            this.picbox.TabIndex = 18;
+            this.picbox.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -234,11 +245,13 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.picbox);
             this.Controls.Add(this.mapBox1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picbox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -261,6 +274,7 @@
         private System.Windows.Forms.RadioButton radioButtonClickModeDraw;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton radioButtonClickModePan;
+        private System.Windows.Forms.PictureBox picbox;
     }
 }
 

@@ -44,7 +44,7 @@ namespace SharpMap_Test
 
         private System.Drawing.Point g_mouseDownImagePos = new System.Drawing.Point();   //マウスを押した瞬間のイメージ座標
 
-        WakeListGenerator wakeListGenerator = new WakeListGenerator();
+        WakeListGenerator refWakeListGenerator = new WakeListGenerator();
 
         //コンストラクタ
         public Form1()
@@ -55,9 +55,9 @@ namespace SharpMap_Test
             this.InitializeMap();
 
             //Form1参照用
-            wakeListGenerator.refForm1 = this;
+            refWakeListGenerator.refForm1 = this;
             //WakeList生成
-            wakeListGenerator.Generate();
+            refWakeListGenerator.Generate();
         }
 
         //マップ初期化
@@ -200,13 +200,12 @@ namespace SharpMap_Test
                 {
                     //ActiveToolをNoneとすることでパンさせない
                     mapBox1.ActiveTool = MapBox.Tools.None;
-
+        
                     //指定時間（ミリ秒）後、Panに戻す
                     DelayActivePan(500);
                 }
             }
         }
-
         //非同期処理 - 指定時間後、ActiveToolをPanにする
         private async void DelayActivePan(int msec)
         {
@@ -385,7 +384,6 @@ namespace SharpMap_Test
             //layer.Style.PointSymbolizer = ;
             //layer.Style.Fill = new SolidBrush(Color.FromArgb(24, Color.Red));
 
-
             // 点のスタイルを作成
 
             //半透明
@@ -452,9 +450,6 @@ namespace SharpMap_Test
             //レイヤを更新
             mapBox1.Map.Layers[index] = layer;
 
-
-
-
             //それとも
             //文字の描画？
             // レイヤーを作成してテキストのスタイルを設定
@@ -463,50 +458,42 @@ namespace SharpMap_Test
             GeometryFactory Lgf = new GeometryFactory();
             List<IGeometry> Ligoms = new List<IGeometry>();
 
-            
             // テキストのジオメトリと属性を作成してレイヤーに追加
             var point = new Coordinate(135, 35); // テキストの座標
-
-
             //ジオメトリをレイヤに反映
-            GeometryProvider Lgpro = new GeometryProvider(Ligeoms);
+            //GeometryProvider Lgpro = new GeometryProvider(Ligeoms);
 
-            labelLayer.DataSource = (Ligoms);
-
+            //labelLayer.DataSource = (Ligoms);
 
             //mapBoxを再描画
             mapBox1.Refresh();
-            
             //====================
 
             //④点を非表示or透明化or別の色に塗りつぶし
             //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-
-            //▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-            //【mapBox上にPictureBoxを置く これでは地図の拡大縮小についていけない】
-            picbox.Parent = mapBox1;
-            //PictureBox picbox = new PictureBox();
-            //picbox.ClientSize = new Size(300, 300);
-            //描画先とするImageオブジェクトを作成する
-            Bitmap canvas = new Bitmap(picbox.Width, picbox.Height);
-            //ImageオブジェクトのGraphicsオブジェクトを作成する
-            Graphics g = Graphics.FromImage(canvas);
-            //四角に内接する楕円を黒で描く
-            g.DrawEllipse(Pens.Black, 10, 20, 100, 80);
-            //リソースを解放する
-            g.Dispose();
-            // 透過にする
-            //canvas.MakeTransparent();
-            //PictureBox1に表示する
-            picbox.Image = canvas;
-
-            //mapBox1.Image = canvas;
-            //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
-
-
-
+            ////▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+            ////【mapBox上にPictureBoxを置く】
+            ////   ×　mapBoxをクリックできなくなってしまう
+            ////   ×　地図の拡大縮小についていけない
+            //picbox.Parent = mapBox1;
+            ////PictureBox picbox = new PictureBox();
+            ////picbox.ClientSize = new Size(300, 300);
+            ////描画先とするImageオブジェクトを作成する
+            //Bitmap canvas = new Bitmap(picbox.Width, picbox.Height);
+            ////ImageオブジェクトのGraphicsオブジェクトを作成する
+            //Graphics g = Graphics.FromImage(canvas);
+            ////四角に内接する楕円を黒で描く
+            //g.DrawEllipse(Pens.Black, 10, 20, 100, 80);
+            ////リソースを解放する
+            //g.Dispose();
+            //// 透過にする
+            ////canvas.MakeTransparent();
+            ////PictureBox1に表示する
+            //picbox.Image = canvas;
+            //
+            ////mapBox1.Image = canvas;
+            ////▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
         }
 
         /// <summary>
@@ -652,5 +639,17 @@ namespace SharpMap_Test
             mapBox.Refresh();
         }
 
+        //イベント - マップの中心が変更(ZoomやPanによる変更も対象)
+        private void mapBox1_MapCenterChanged(Coordinate center)
+        {
+            //ラベルの再配置
+            refWakeListGenerator.RelocateLabel();
+        }
+
+        //地図座標→イメージ座標に変換
+        public System.Drawing.Point TransPosWorldToImage(Coordinate worldPos)
+        {
+            return System.Drawing.Point.Round(this.mapBox1.Map.WorldToImage(worldPos));
+        }
     }
 }

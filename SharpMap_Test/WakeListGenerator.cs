@@ -1,10 +1,12 @@
 ﻿using GeoAPI.Geometries;
 using Newtonsoft.Json;
+using SharpMap.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 /** メモ
 ●group1 : 福岡県の西
@@ -75,7 +77,6 @@ namespace SharpMap_Test
 
             //描画する
             Draw(wakeList);
-
         }
 
         //描画する
@@ -112,10 +113,57 @@ namespace SharpMap_Test
                     refForm1.SetLineDash(layername);
                     refForm1.SetLineArrow(layername);
                     refForm1.SetPointOutLine(layername);
+
+                    if(pos.Key== "pos1")
+                    {
+                        //ラベル名はwake.Keyの4文字目以降を切り出し
+                        GenerateLabel(wpos, wake.Key.Substring(4));
+                    }
                 }
                 Console.WriteLine();
             }
         }
 
+        //==============================================
+        //ラベル操作
+        public struct WakeLabel
+        {
+            public Label label;
+            public Coordinate wpos;
+        }
+        List<WakeLabel> wakeLabelList = new List<WakeLabel>();
+
+        //ラベル生成
+        private void GenerateLabel(Coordinate worldPos, string text)
+        {
+            //新しいラベルを生成
+            Label newLabel = new Label();
+            newLabel.Text = text;
+            newLabel.AutoSize = true;
+            //配置
+            newLabel.Location = refForm1.TransPosWorldToImage(worldPos);
+            //newLabel.Parent = refForm1.mapBox1; //親を設定
+            //newLabel.BackColor = System.Drawing.Color.Transparent;//背景を透過
+            //newLabel.Name = labelName; //識別名
+            //コントロールに追加
+            refForm1.mapBox1.Controls.Add(newLabel);
+
+            //リストに追加
+            WakeLabel wakeLabel = new WakeLabel();
+            wakeLabel.label = newLabel;
+            wakeLabel.wpos = worldPos;
+            wakeLabelList.Add(wakeLabel);
+        }
+
+        // ラベルをmapboxに合わせて再配置
+        public void RelocateLabel()
+        {
+            //Console.WriteLine("RelocateLabel");
+            foreach (WakeLabel wakeLabel in wakeLabelList)
+            {
+                wakeLabel.label.Location = refForm1.TransPosWorldToImage(wakeLabel.wpos);
+            }
+        }
+        //==============================================
     }
 }

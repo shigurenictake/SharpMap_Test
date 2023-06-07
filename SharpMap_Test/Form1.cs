@@ -14,6 +14,8 @@ using SharpMap.Rendering.Symbolizer;
 using System.Drawing.Drawing2D;
 using SharpMap.Styles;
 using System.Linq;
+using SharpMap.Rendering.Thematics;
+using NetTopologySuite.IO;
 
 namespace SharpMap_Test
 {
@@ -69,6 +71,8 @@ namespace SharpMap_Test
             //pointLineLayerレイヤ生成
             this.GenerateLayer("pointLineLayer");
 
+            TestLayer();
+
             //Zoom制限
             mapBox1.Map.MinimumZoom = 0.1;
             mapBox1.Map.MaximumZoom = 360.0;
@@ -78,6 +82,66 @@ namespace SharpMap_Test
             
             //mapBoxを再描画
             mapBox1.Refresh();
+        }
+
+        //テスト
+        private void TestLayer()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("testlayer");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+
+            //図形生成クラス
+            GeometryFactory gf1 = new GeometryFactory();
+            GeometryFactory gf2 = new GeometryFactory();
+
+
+            //Pointが2つ以上ならばコレクション上、最後の2点を取得する
+            Coordinate[] linePos1 = new Coordinate[2];
+            linePos1[0] = new Coordinate(110, 45);
+            linePos1[1] = new Coordinate(115, 40);
+            ILineString ilinestring1 = gf1.CreateLineString(linePos1);
+            igeoms.Add(ilinestring1);
+
+            //Pointが2つ以上ならばコレクション上、最後の2点を取得する
+            Coordinate[] linePos2 = new Coordinate[2];
+            linePos2[0] = new Coordinate(140, 35);
+            linePos2[1] = new Coordinate(145, 30);
+            ILineString ilinestring2 = gf2.CreateLineString(linePos2);
+            igeoms.Add(ilinestring2);
+
+            LineString lineStringDummy;
+            //lineStringDummy.AsText
+
+            ILineString ilinestringDummy;
+
+            // 多角形塗りつぶし
+            var poly = new GeometryFactory().CreatePolygon(new Coordinate[] {
+                 new Coordinate(ilinestring1.Coordinates[0].X, ilinestring1.Coordinates[0].Y),
+                 new Coordinate(ilinestring1.Coordinates[1].X, ilinestring1.Coordinates[1].Y),
+                 new Coordinate(ilinestring2.Coordinates[1].X, ilinestring2.Coordinates[1].Y),
+                 new Coordinate(ilinestring2.Coordinates[0].X, ilinestring2.Coordinates[0].Y),
+                 new Coordinate(155,25),
+                 new Coordinate(ilinestring1.Coordinates[0].X, ilinestring1.Coordinates[0].Y)
+            });
+            igeoms.Add(poly);
+
+            Console.WriteLine($"【出力】poly.AsText() = {poly.AsText()}");
+            //【出力】poly.AsText() = POLYGON ((110 45, 115 40, 145 30, 140 35, 155 25, 110 45))
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            var style = new VectorStyle();
+            style.Line = new Pen(Color.Red, 2);
+            //layer.Style.PointColor = Brushes.Blue;
+            //layer.Style.Line = new Pen(Color.Blue, 1.0f);
+
+            //レイヤをmapBoxに追加
+            mapBox1.Map.Layers.Add(layer);
         }
 
         //基底レイヤ初期化

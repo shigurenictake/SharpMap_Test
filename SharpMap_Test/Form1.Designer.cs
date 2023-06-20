@@ -45,6 +45,7 @@
             this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.radioButtonEnvelopeHit = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -168,12 +169,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.radioButtonEnvelopeHit);
             this.groupBox1.Controls.Add(this.radioButtonClickModePan);
             this.groupBox1.Controls.Add(this.radioButtonClickModeSelect);
             this.groupBox1.Controls.Add(this.radioButtonClickModeDraw);
             this.groupBox1.Location = new System.Drawing.Point(483, 457);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(129, 126);
+            this.groupBox1.Size = new System.Drawing.Size(175, 152);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "クリックモード";
@@ -213,7 +215,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(481, 596);
+            this.label4.Location = new System.Drawing.Point(481, 623);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 17;
@@ -226,6 +228,17 @@
             this.richTextBox1.Size = new System.Drawing.Size(334, 183);
             this.richTextBox1.TabIndex = 18;
             this.richTextBox1.Text = "";
+            // 
+            // radioButtonEnvelopeHit
+            // 
+            this.radioButtonEnvelopeHit.AutoSize = true;
+            this.radioButtonEnvelopeHit.Location = new System.Drawing.Point(18, 109);
+            this.radioButtonEnvelopeHit.Name = "radioButtonEnvelopeHit";
+            this.radioButtonEnvelopeHit.Size = new System.Drawing.Size(122, 16);
+            this.radioButtonEnvelopeHit.TabIndex = 3;
+            this.radioButtonEnvelopeHit.TabStop = true;
+            this.radioButtonEnvelopeHit.Text = "Envelope当たり判定";
+            this.radioButtonEnvelopeHit.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -273,6 +286,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton radioButtonClickModePan;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RadioButton radioButtonEnvelopeHit;
     }
 }
 

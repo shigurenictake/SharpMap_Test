@@ -232,6 +232,25 @@ namespace SharpMap_Test
                 //前回選択ジオメトリを更新
                 g_selectedGeomPrev = g_selectedGeom;
             }
+
+            //クリックモード == Envelope当たり判定
+            if (this.radioButtonEnvelopeHit.Checked == true)
+            {
+                Console.WriteLine("EnvelopeHit Check");
+                //SharpMap補助クラス
+                SharpMapHelper smh = new SharpMapHelper();
+                //レイヤ取得
+                //VectorLayer layer = smh.GetVectorLayerByName(mapBox1, "pointLineLayer");
+                //VectorLayer layer = smh.GetVectorLayerByName(mapBox1, "testlayer");
+                VectorLayer layer = smh.GetVectorLayerByName(mapBox1, "wake1");
+                //クリック位置の周辺矩形の当たり判定を行う
+                Collection<IGeometry> igeoms = HitCheckEnvelope(layer, g_worldPos);
+                if (igeoms != null)
+                {
+                    foreach (IGeometry igeom in igeoms) { Console.WriteLine(igeom); }
+                }
+                
+            }
         }
 
         //イベント - ラジオボタン「パン」変更時
@@ -716,6 +735,28 @@ namespace SharpMap_Test
         public System.Drawing.Point TransPosWorldToImage(Coordinate worldPos)
         {
             return System.Drawing.Point.Round(this.mapBox1.Map.WorldToImage(worldPos));
+        }
+
+        //周辺矩形の当たり判定を行う
+        public Collection<IGeometry> HitCheckEnvelope(VectorLayer layer, Coordinate worldPos)
+        {
+            if (layer == null) { return null; }
+
+            double x1 = worldPos.X;
+
+            //指定した領域の特徴を返す Envelope( x1 , x2 , y1, y2)
+            Collection<IGeometry> igeoms =
+                layer.DataSource.GetGeometriesInView(
+                    new GeoAPI.Geometries.Envelope(
+                        worldPos.X - 1, worldPos.X + 1,
+                        worldPos.Y - 1, worldPos.Y + 1)
+                );
+            return igeoms;
+
+            /*
+            //使用例
+            foreach (IGeometry igeom in igeoms) { Console.WriteLine(geom); }
+            */
         }
     }
 }

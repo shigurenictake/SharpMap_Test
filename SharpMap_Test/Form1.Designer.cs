@@ -44,6 +44,7 @@
             this.radioButtonClickModeSelect = new System.Windows.Forms.RadioButton();
             this.radioButtonClickModeDraw = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -218,11 +219,20 @@
             this.label4.TabIndex = 17;
             this.label4.Text = "選択判定";
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(794, 452);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(334, 183);
+            this.richTextBox1.TabIndex = 18;
+            this.richTextBox1.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1140, 654);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
@@ -262,6 +272,7 @@
         private System.Windows.Forms.RadioButton radioButtonClickModeDraw;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton radioButtonClickModePan;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

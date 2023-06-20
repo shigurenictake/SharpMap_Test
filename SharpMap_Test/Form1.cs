@@ -46,7 +46,7 @@ namespace SharpMap_Test
 
         private System.Drawing.Point g_mouseDownImagePos = new System.Drawing.Point();   //マウスを押した瞬間のイメージ座標
 
-        WakeListGenerator refWakeListGenerator = new WakeListGenerator();
+        WakeController refWakeController = new WakeController();
 
         //コンストラクタ
         public Form1()
@@ -57,9 +57,9 @@ namespace SharpMap_Test
             this.InitializeMap();
 
             //Form1参照用
-            refWakeListGenerator.refForm1 = this;
+            refWakeController.refForm1 = this;
             //WakeList生成
-            refWakeListGenerator.Generate();
+            refWakeController.Generate();
         }
 
         //マップ初期化
@@ -221,10 +221,12 @@ namespace SharpMap_Test
                 if (g_selectedGeom.igeom != null)
                 {
                     this.label4.Text = $"{g_selectedGeom.layername} : [ {g_selectedGeom.index} ] : {g_selectedGeom.igeom}";
+                    this.richTextBox1.AppendText(this.label4.Text + "\n");
                 }//選択したものがないならば"選択なし"をラベルに表示
                 else
                 {
                     this.label4.Text = $"選択なし";
+                    this.richTextBox1.Clear();
                 }
 
                 //前回選択ジオメトリを更新
@@ -707,7 +709,7 @@ namespace SharpMap_Test
         private void mapBox1_MapCenterChanged(Coordinate center)
         {
             //ラベルの再配置
-            refWakeListGenerator.RelocateLabel();
+            refWakeController.RelocateLabel();
         }
 
         //地図座標→イメージ座標に変換

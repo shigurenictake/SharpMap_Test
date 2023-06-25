@@ -103,12 +103,12 @@ namespace SharpMap_Test
             GeometryFactory gf = new GeometryFactory();
 
             //点1の生成
-            Coordinate pos1 = new Coordinate(140, 30);
+            Coordinate pos1 = new Coordinate(155, 30);
             IPoint ipont1 = gf.CreatePoint(pos1);
             igeoms.Add(ipont1);
 
             //点2の生成
-            Coordinate pos2 = new Coordinate(141, 31);
+            Coordinate pos2 = new Coordinate(pos1.X+1, pos1.Y+1);
             IPoint ipont2 = gf.CreatePoint(pos2);
             igeoms.Add(ipont2);
 
@@ -117,8 +117,10 @@ namespace SharpMap_Test
             layer.DataSource = gpro;
 
             // レイヤーのスタイル設定
-            layer.Style.PointColor = Brushes.Blue;
+            layer.Style.PointColor = Brushes.Red;
             layer.Style.PointSize = 7;
+
+            //layer.Style.Enabled= false; //スタイルをレンダリングするかどうか
 
             //レイヤをmapBoxに追加
             mapBox.Map.Layers.Add(layer);
@@ -178,18 +180,18 @@ namespace SharpMap_Test
 
             //線1の生成
             Coordinate[] linePos1 = new Coordinate[2];
-            linePos1[0] = new Coordinate(110, 45);
-            linePos1[1] = new Coordinate(115, 40);
+            linePos1[0] = new Coordinate(120, 45);
+            linePos1[1] = new Coordinate(linePos1[0].X + 5, linePos1[0].Y - 4);
             ILineString ilinestring1 = gf.CreateLineString(linePos1);
             igeoms.Add(ilinestring1);
             //Console.WriteLine($"  ◆ilinestring1[0] = {ilinestring1.Coordinates[0].X}, {ilinestring1.Coordinates[0].Y}");
 
             //線2の生成
             Coordinate[] linePos2 = new Coordinate[4];
-            linePos2[0] = new Coordinate(140, 35);
-            linePos2[1] = new Coordinate(143, 36);
-            linePos2[2] = new Coordinate(144, 38);
-            linePos2[3] = new Coordinate(147, 39);
+            linePos2[0] = new Coordinate(linePos1[0].X + 0, linePos1[0].Y - 8);
+            linePos2[1] = new Coordinate(linePos2[0].X + 3, linePos2[0].Y + 1);
+            linePos2[2] = new Coordinate(linePos2[0].X + 4, linePos2[0].Y + 3);
+            linePos2[3] = new Coordinate(linePos2[0].X + 7, linePos2[0].Y + 4);
             ILineString ilinestring2 = gf.CreateLineString(linePos2);
             igeoms.Add(ilinestring2);
 
@@ -198,12 +200,11 @@ namespace SharpMap_Test
             layer.DataSource = gpro;
 
             // レイヤーのスタイル設定
-            //layer.Style.PointColor = Brushes.Blue;
             layer.Style.Line = new Pen(Color.Red, 2); //ラインの色、幅
             layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.Line.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(4f, 4f, true); //矢印にする (width, height, isFilled)
             layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
-            layer.Style.Outline = new Pen(Color.YellowGreen, 1.0f); //アウトラインの色、幅
-            //layer.Style.Enabled= false; //スタイルをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.Yellow, 4.0f); //アウトラインの色、幅
 
             //レイヤをmapBoxに追加
             mapBox.Map.Layers.Add(layer);
@@ -221,16 +222,16 @@ namespace SharpMap_Test
 
             //線1の生成
             Coordinate[] linePos1 = new Coordinate[2];
-            linePos1[0] = new Coordinate(110, 45);
-            linePos1[1] = new Coordinate(115, 40);
+            linePos1[0] = new Coordinate(145, 45);
+            linePos1[1] = new Coordinate(linePos1[0].X + 5, linePos1[0].Y - 4);
             ILineString ilinestring1 = gf.CreateLineString(linePos1);
 
             //線2の生成
             Coordinate[] linePos2 = new Coordinate[4];
-            linePos2[0] = new Coordinate(140, 35);
-            linePos2[1] = new Coordinate(143, 36);
-            linePos2[2] = new Coordinate(144, 38);
-            linePos2[3] = new Coordinate(147, 39);
+            linePos2[0] = new Coordinate(linePos1[0].X + 0, linePos1[0].Y - 8);
+            linePos2[1] = new Coordinate(linePos2[0].X + 3, linePos2[0].Y + 1);
+            linePos2[2] = new Coordinate(linePos2[0].X + 4, linePos2[0].Y + 3);
+            linePos2[3] = new Coordinate(linePos2[0].X + 7, linePos2[0].Y + 4);
             ILineString ilinestring2 = gf.CreateLineString(linePos2);
 
             ILineString[] ilinestrings = new ILineString[] { ilinestring1, ilinestring2 };
@@ -242,11 +243,11 @@ namespace SharpMap_Test
             layer.DataSource = gpro;
 
             // レイヤーのスタイル設定
-            //layer.Style.PointColor = Brushes.Blue;
             layer.Style.Line = new Pen(Color.Green, 2); //ラインの色、幅
             layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.Line.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(6f, 10f, true); //矢印にする (width, height, isFilled)
             layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
-            layer.Style.Outline = new Pen(Color.YellowGreen, 1.0f); //アウトラインの色、幅
+            layer.Style.Outline = new Pen(Color.Yellow, 6.0f); //アウトラインの色、幅
             //layer.Style.Enabled= false; //スタイルをレンダリングするかどうか
 
             //レイヤをmapBoxに追加
@@ -324,7 +325,7 @@ namespace SharpMap_Test
 
             // 多角形 塗りつぶし
             //   開始点と終点を同じにしなければ例外エラーとなる
-            Coordinate basepos1 = new Coordinate(135, 38);
+            Coordinate basepos1 = new Coordinate(130, 28);
             Coordinate[] coordinates1 = new Coordinate[6]{
                 new Coordinate(basepos1),
                 new Coordinate(basepos1.X + 3, basepos1.Y - 6),
@@ -335,7 +336,7 @@ namespace SharpMap_Test
             };
             IPolygon ipoly1 = gf.CreatePolygon(coordinates1);
 
-            Coordinate basepos2 = new Coordinate(140, 40);
+            Coordinate basepos2 = new Coordinate(basepos1.X-5, basepos1.Y+2);
             Coordinate[] coordinates2 = new Coordinate[6]{
                 new Coordinate(basepos2),
                 new Coordinate(basepos2.X + 3, basepos2.Y - 6),
@@ -357,7 +358,7 @@ namespace SharpMap_Test
             // レイヤーのスタイル設定
             //layer.Style.Fill = Brushes.Red; //塗りつぶし色
             //layer.Style.Fill = new SolidBrush(Color.Empty); //塗りつぶし色 なし
-            layer.Style.Fill = new SolidBrush(Color.FromArgb(128, 0, 0, 255)); //塗りつぶし色 透過あり
+            layer.Style.Fill = new SolidBrush(Color.FromArgb(128, 255, 0, 0)); //塗りつぶし色 透過あり
             layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
             layer.Style.Outline = new Pen(Color.Yellow, 1.0f); //アウトライン
 
@@ -386,7 +387,7 @@ namespace SharpMap_Test
 
             // 多角形 塗りつぶし
             //   開始点と終点を同じにしなければ例外エラーとなる
-            Coordinate basepos = new Coordinate(145, 35);
+            Coordinate basepos = new Coordinate(150, 30);
             Coordinate[] coordinates = new Coordinate[6]{
                 new Coordinate(basepos),
                 new Coordinate(basepos.X + 3, basepos.Y - 6),
@@ -403,8 +404,9 @@ namespace SharpMap_Test
             layer.DataSource = gpro;
 
             // レイヤーのスタイル設定
-            layer.Style.Line = new Pen(Color.Orange, 2); //ラインの色、幅
+            layer.Style.Line = new Pen(Color.DarkRed, 2); //ラインの色、幅
             layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.Line.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(8f, 12f, true); //矢印にする (width, height, isFilled)
             layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
             layer.Style.Outline = new Pen(Color.Yellow, 5.0f); //アウトライン
 
@@ -433,8 +435,8 @@ namespace SharpMap_Test
 
             //線1の生成
             Coordinate[] linePos1 = new Coordinate[2];
-            linePos1[0] = new Coordinate(150, 45);
-            linePos1[1] = new Coordinate(155, 40);
+            linePos1[0] = new Coordinate(155, 45);
+            linePos1[1] = new Coordinate(linePos1[0].X + 5, linePos1[0].Y - 4);
             ILineString ilinestring1 = gf.CreateLineString(linePos1);
             ilinestring1.UserData = "ラインストリング１";
 
@@ -442,10 +444,10 @@ namespace SharpMap_Test
 
             //線2の生成
             Coordinate[] linePos2 = new Coordinate[4];
-            linePos2[0] = new Coordinate(160, 35);
-            linePos2[1] = new Coordinate(163, 36);
-            linePos2[2] = new Coordinate(164, 38);
-            linePos2[3] = new Coordinate(167, 39);
+            linePos2[0] = new Coordinate(linePos1[0].X + 0, linePos1[0].Y - 8);
+            linePos2[1] = new Coordinate(linePos2[0].X + 3, linePos2[0].Y + 1);
+            linePos2[2] = new Coordinate(linePos2[0].X + 4, linePos2[0].Y + 3);
+            linePos2[3] = new Coordinate(linePos2[0].X + 7, linePos2[0].Y + 4);
             ILineString ilinestring2 = gf.CreateLineString(linePos2);
             ilinestring2.UserData = "ラインストリング２";
             igeoms.Add(ilinestring2);
@@ -457,6 +459,7 @@ namespace SharpMap_Test
             // レイヤーのスタイル設定
             layer.Style.Line = new Pen(Color.Purple, 2); //ラインの色、幅
             layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.Line.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(8f, 12f, false); //矢印にする (width, height, isFilled)
             layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
             layer.Style.Outline = new Pen(Color.Olive, 1.0f); //アウトラインの色、幅
 

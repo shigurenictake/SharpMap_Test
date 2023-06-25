@@ -80,6 +80,7 @@ namespace SharpMap_Test
             TestLayerLinearRing();             //テスト LinearRing
 
             TestLayerUserdata();               //テスト Userdata
+            TestLayerGeometryCollection();     //テスト GeometryCollection
 
             //Zoom制限
             mapBox.Map.MinimumZoom = 0.1;
@@ -476,6 +477,57 @@ namespace SharpMap_Test
             //[ 0 ] : LINESTRING (150 45, 155 40) : ラインストリング１
             //[ 1 ] : LINESTRING (160 35, 163 36, 164 38, 167 39) : ラインストリング２
         }
+
+        //テスト GeometryCollection
+        private void TestLayerGeometryCollection()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerGeometryCollection");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            //点の生成
+            Coordinate pos1 = new Coordinate(140, 25);
+            IPoint ipont1 = gf.CreatePoint(pos1);
+
+            //線の生成
+            Coordinate[] linePos1 = new Coordinate[2];
+            linePos1[0] = new Coordinate(pos1);
+            linePos1[1] = new Coordinate(pos1.X + 2, pos1.Y - 2);
+            ILineString ilinestring1 = gf.CreateLineString(linePos1);
+
+            IGeometry[] geoms = new IGeometry[2] { ipont1, ilinestring1 };
+
+            IGeometryCollection igeometrycollection = gf.CreateGeometryCollection(geoms);
+            igeometrycollection.UserData = "ジオメトリーコレクション＃";
+            igeoms.Add(igeometrycollection);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            layer.Style.PointColor = Brushes.Blue;
+            layer.Style.PointSize = 10;
+            layer.Style.Line = new Pen(Color.Blue, 4); //ラインの色、幅
+            //layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.Line.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(4f, 4f, true); //矢印にする (width, height, isFilled)
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]} : {igeoms[i].UserData}" + "\n"; }
+            Console.WriteLine("■TestLayerGeometryCollection");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerUserdata
+            //[ 0 ] : GEOMETRYCOLLECTION (POINT (140 25), LINESTRING (140 25, 142 23)) : ジオメトリーコレクション＃
+        }
+
 
         //基底レイヤ初期化
         private void InitializeBaseLayer()

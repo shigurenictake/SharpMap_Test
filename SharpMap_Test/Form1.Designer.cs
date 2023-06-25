@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mapBox1 = new SharpMap.Forms.MapBox();
+            this.mapBox = new SharpMap.Forms.MapBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -49,30 +49,30 @@
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // mapBox1
+            // mapBox
             // 
-            this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.None;
-            this.mapBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.mapBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.mapBox1.CustomTool = null;
-            this.mapBox1.FineZoomFactor = 10D;
-            this.mapBox1.Location = new System.Drawing.Point(12, 41);
-            this.mapBox1.MapQueryMode = SharpMap.Forms.MapBox.MapQueryType.LayerByIndex;
-            this.mapBox1.Name = "mapBox1";
-            this.mapBox1.QueryGrowFactor = 5F;
-            this.mapBox1.QueryLayerIndex = 0;
-            this.mapBox1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.mapBox1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.mapBox1.ShowProgressUpdate = false;
-            this.mapBox1.Size = new System.Drawing.Size(776, 396);
-            this.mapBox1.TabIndex = 0;
-            this.mapBox1.Text = "mapBox1";
-            this.mapBox1.WheelZoomMagnitude = -2D;
-            this.mapBox1.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseMove);
-            this.mapBox1.MouseDown += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseDown);
-            this.mapBox1.MouseUp += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseUp);
-            this.mapBox1.MapCenterChanged += new SharpMap.Forms.MapBox.MapCenterChangedHandler(this.mapBox1_MapCenterChanged);
-            this.mapBox1.Click += new System.EventHandler(this.mapBox1_Click);
+            this.mapBox.ActiveTool = SharpMap.Forms.MapBox.Tools.None;
+            this.mapBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.mapBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.mapBox.CustomTool = null;
+            this.mapBox.FineZoomFactor = 10D;
+            this.mapBox.Location = new System.Drawing.Point(12, 41);
+            this.mapBox.MapQueryMode = SharpMap.Forms.MapBox.MapQueryType.LayerByIndex;
+            this.mapBox.Name = "mapBox";
+            this.mapBox.QueryGrowFactor = 5F;
+            this.mapBox.QueryLayerIndex = 0;
+            this.mapBox.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.mapBox.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.mapBox.ShowProgressUpdate = false;
+            this.mapBox.Size = new System.Drawing.Size(776, 396);
+            this.mapBox.TabIndex = 0;
+            this.mapBox.Text = "mapBox";
+            this.mapBox.WheelZoomMagnitude = -2D;
+            this.mapBox.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseMove);
+            this.mapBox.MouseDown += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseDown);
+            this.mapBox.MouseUp += new SharpMap.Forms.MapBox.MouseEventHandler(this.mapBox1_MouseUp);
+            this.mapBox.MapCenterChanged += new SharpMap.Forms.MapBox.MapCenterChangedHandler(this.mapBox1_MapCenterChanged);
+            this.mapBox.Click += new System.EventHandler(this.mapBox1_Click);
             // 
             // label2
             // 
@@ -258,7 +258,7 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.mapBox1);
+            this.Controls.Add(this.mapBox);
             this.Name = "Form1";
             this.Text = "Form1";
             this.groupBox1.ResumeLayout(false);
@@ -278,7 +278,7 @@
         private System.Windows.Forms.RichTextBox richTextBoxLayerList;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.RichTextBox richTextBoxPointLayerList;
-        public SharpMap.Forms.MapBox mapBox1;
+        public SharpMap.Forms.MapBox mapBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButtonClickModeSelect;

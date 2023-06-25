@@ -113,11 +113,11 @@ namespace SharpMap_Test
             newLabel.AutoSize = true;
             //配置
             newLabel.Location = refForm1.TransPosWorldToImage(worldPos);
-            //newLabel.Parent = refForm1.mapBox1; //親を設定
+            //newLabel.Parent = refForm1.mapBox; //親を設定
             //newLabel.BackColor = System.Drawing.Color.Transparent;//背景を透過
             //newLabel.Name = labelName; //識別名
             //コントロールに追加
-            refForm1.mapBox1.Controls.Add(newLabel);
+            refForm1.mapBox.Controls.Add(newLabel);
 
             //リストに追加
             WakeLabel wakeLabel = new WakeLabel();

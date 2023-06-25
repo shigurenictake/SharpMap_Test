@@ -71,85 +71,415 @@ namespace SharpMap_Test
             //pointLineLayerレイヤ生成
             this.GenerateLayer("pointLineLayer");
 
-            TestLayer();
+            TestLayerPoint();                  //テスト Point
+            TestLayerMultiPointFromCoords();   //テスト MultiPointFromCoords
+            TestLayerLineString();             //テスト LineString
+            TestLayerMultiLineString();        //テスト MultiLineString
+            TestLayerPolygon();                //テスト Polygon
+            TestLayerMultiPolygon();           //テスト MultiPolygon
+            TestLayerLinearRing();             //テスト LinearRing
+
+            TestLayerUserdata();               //テスト Userdata
 
             //Zoom制限
-            mapBox1.Map.MinimumZoom = 0.1;
-            mapBox1.Map.MaximumZoom = 360.0;
+            mapBox.Map.MinimumZoom = 0.1;
+            mapBox.Map.MaximumZoom = 360.0;
 
             //レイヤ全体を表示する(全レイヤの範囲にズームする)
-            mapBox1.Map.ZoomToExtents();
+            mapBox.Map.ZoomToExtents();
             
             //mapBoxを再描画
-            mapBox1.Refresh();
+            mapBox.Refresh();
         }
 
-        //テスト
-        private void TestLayer()
+        //テスト Point
+        private void TestLayerPoint()
         {
             //レイヤ生成
-            VectorLayer layer = new VectorLayer("testlayer");
+            VectorLayer layer = new VectorLayer("TestLayerPoint");
             //ジオメトリ生成
             List<IGeometry> igeoms = new List<IGeometry>();
-
             //図形生成クラス
-            GeometryFactory gf1 = new GeometryFactory();
-            GeometryFactory gf2 = new GeometryFactory();
+            GeometryFactory gf = new GeometryFactory();
 
+            //点1の生成
+            Coordinate pos1 = new Coordinate(140, 30);
+            IPoint ipont1 = gf.CreatePoint(pos1);
+            igeoms.Add(ipont1);
 
-            //Pointが2つ以上ならばコレクション上、最後の2点を取得する
-            Coordinate[] linePos1 = new Coordinate[2];
-            linePos1[0] = new Coordinate(110, 45);
-            linePos1[1] = new Coordinate(115, 40);
-            ILineString ilinestring1 = gf1.CreateLineString(linePos1);
-            igeoms.Add(ilinestring1);
-
-            //Pointが2つ以上ならばコレクション上、最後の2点を取得する
-            Coordinate[] linePos2 = new Coordinate[2];
-            linePos2[0] = new Coordinate(140, 35);
-            linePos2[1] = new Coordinate(145, 30);
-            ILineString ilinestring2 = gf2.CreateLineString(linePos2);
-            igeoms.Add(ilinestring2);
-
-            LineString lineStringDummy;
-            //lineStringDummy.AsText
-
-            ILineString ilinestringDummy;
-
-            // 多角形塗りつぶし
-            var poly = new GeometryFactory().CreatePolygon(new Coordinate[] {
-                 new Coordinate(ilinestring1.Coordinates[0].X, ilinestring1.Coordinates[0].Y),
-                 new Coordinate(ilinestring1.Coordinates[1].X, ilinestring1.Coordinates[1].Y),
-                 new Coordinate(ilinestring2.Coordinates[1].X, ilinestring2.Coordinates[1].Y),
-                 new Coordinate(ilinestring2.Coordinates[0].X, ilinestring2.Coordinates[0].Y),
-                 new Coordinate(155,25),
-                 new Coordinate(ilinestring1.Coordinates[0].X, ilinestring1.Coordinates[0].Y)
-            });
-            igeoms.Add(poly);
-
-            Console.WriteLine($"【出力】poly.AsText() = {poly.AsText()}");
-            //【出力】poly.AsText() = POLYGON ((110 45, 115 40, 145 30, 140 35, 155 25, 110 45))
+            //点2の生成
+            Coordinate pos2 = new Coordinate(141, 31);
+            IPoint ipont2 = gf.CreatePoint(pos2);
+            igeoms.Add(ipont2);
 
             //ジオメトリをレイヤに反映
             GeometryProvider gpro = new GeometryProvider(igeoms);
             layer.DataSource = gpro;
 
             // レイヤーのスタイル設定
-            var style = new VectorStyle();
-            style.Line = new Pen(Color.Red, 2);
-            //layer.Style.PointColor = Brushes.Blue;
-            //layer.Style.Line = new Pen(Color.Blue, 1.0f);
+            layer.Style.PointColor = Brushes.Blue;
+            layer.Style.PointSize = 7;
 
             //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(layer);
+            mapBox.Map.Layers.Add(layer);
+        }
+
+        //テスト MultiPointFromCoords
+        private void TestLayerMultiPointFromCoords()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerMultiPointFromCoords");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            //点の生成
+            Coordinate basecoordinate = new Coordinate(140, 30);
+
+            Coordinate[] coordinates = new Coordinate[4];
+            coordinates[0] = basecoordinate;
+            coordinates[1] = new Coordinate(basecoordinate.X - 2, basecoordinate.Y + 1);
+            coordinates[2] = new Coordinate(basecoordinate.X - 3, basecoordinate.Y + 2);
+            coordinates[3] = new Coordinate(basecoordinate.X - 5, basecoordinate.Y + 3);
+            IMultiPoint imultipoint = gf.CreateMultiPointFromCoords(coordinates);
+            igeoms.Add(imultipoint);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            layer.Style.PointColor = Brushes.Blue;
+            layer.Style.PointSize = 7;
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]}" + "\n"; }
+            Console.WriteLine("■TestLayerMultiPointFromCoords");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerMultiPointFromCoords
+            //[ 0 ] : MULTIPOINT ((140 30), (138 31), (137 32), (135 33))
+        }
+
+        //テスト LineString
+        private void TestLayerLineString()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerLineString");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            //線1の生成
+            Coordinate[] linePos1 = new Coordinate[2];
+            linePos1[0] = new Coordinate(110, 45);
+            linePos1[1] = new Coordinate(115, 40);
+            ILineString ilinestring1 = gf.CreateLineString(linePos1);
+            igeoms.Add(ilinestring1);
+            //Console.WriteLine($"  ◆ilinestring1[0] = {ilinestring1.Coordinates[0].X}, {ilinestring1.Coordinates[0].Y}");
+
+            //線2の生成
+            Coordinate[] linePos2 = new Coordinate[4];
+            linePos2[0] = new Coordinate(140, 35);
+            linePos2[1] = new Coordinate(143, 36);
+            linePos2[2] = new Coordinate(144, 38);
+            linePos2[3] = new Coordinate(147, 39);
+            ILineString ilinestring2 = gf.CreateLineString(linePos2);
+            igeoms.Add(ilinestring2);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            //layer.Style.PointColor = Brushes.Blue;
+            layer.Style.Line = new Pen(Color.Red, 2); //ラインの色、幅
+            layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.YellowGreen, 1.0f); //アウトラインの色、幅
+            //layer.Style.Enabled= false; //スタイルをレンダリングするかどうか
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+        }
+
+        //テスト MultiLineString
+        private void TestLayerMultiLineString()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerMultiLineString");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            //線1の生成
+            Coordinate[] linePos1 = new Coordinate[2];
+            linePos1[0] = new Coordinate(110, 45);
+            linePos1[1] = new Coordinate(115, 40);
+            ILineString ilinestring1 = gf.CreateLineString(linePos1);
+
+            //線2の生成
+            Coordinate[] linePos2 = new Coordinate[4];
+            linePos2[0] = new Coordinate(140, 35);
+            linePos2[1] = new Coordinate(143, 36);
+            linePos2[2] = new Coordinate(144, 38);
+            linePos2[3] = new Coordinate(147, 39);
+            ILineString ilinestring2 = gf.CreateLineString(linePos2);
+
+            ILineString[] ilinestrings = new ILineString[] { ilinestring1, ilinestring2 };
+            IMultiLineString imultilinestring = gf.CreateMultiLineString( ilinestrings );
+            igeoms.Add(imultilinestring);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            //layer.Style.PointColor = Brushes.Blue;
+            layer.Style.Line = new Pen(Color.Green, 2); //ラインの色、幅
+            layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.YellowGreen, 1.0f); //アウトラインの色、幅
+            //layer.Style.Enabled= false; //スタイルをレンダリングするかどうか
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]}" + "\n"; }
+            Console.WriteLine("■TestLayerMultiLineString");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerMultiLineString
+            //[ 0 ] : MULTILINESTRING ((110 45, 115 40), (140 35, 143 36, 144 38, 147 39))
+        }
+
+        //テスト Polygon
+        private void TestLayerPolygon()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerPolygon");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            // 多角形 塗りつぶし
+            //   開始点と終点を同じにしなければ例外エラーとなる
+            Coordinate basepos = new Coordinate(135, 38);
+            Coordinate[] coordinates = new Coordinate[6]{
+                new Coordinate(basepos),
+                new Coordinate(basepos.X + 3, basepos.Y - 6),
+                new Coordinate(basepos.X - 4, basepos.Y - 2),
+                new Coordinate(basepos.X + 4, basepos.Y - 2),
+                new Coordinate(basepos.X - 3, basepos.Y - 6),
+                new Coordinate(basepos)
+            };
+            var ipoly = gf.CreatePolygon(coordinates);
+            igeoms.Add(ipoly);
+            //Console.WriteLine($"【出力】poly.AsText() = {ipoly.AsText()}");
+            //                  →【出力】poly.AsText() = POLYGON ((110 45, 115 40, 145 30, 140 35, 155 25, 110 45))
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            //layer.Style.Fill = Brushes.Red; //塗りつぶし色
+            //layer.Style.Fill = new SolidBrush(Color.Empty); //塗りつぶし色 なし
+            layer.Style.Fill = new SolidBrush(Color.FromArgb(128, 0, 0, 255)); //塗りつぶし色 透過あり
+            layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.Yellow, 1.0f); //アウトライン
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]}" + "\n"; }
+            Console.WriteLine("■TestLayerPolygon");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerPolygon
+            //[ 0 ] : POLYGON ((135 38, 138 32, 131 36, 139 36, 132 32, 135 38))
+        }
+
+        //テスト MultiPolygon
+        private void TestLayerMultiPolygon()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerMultiPolygon");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            // 多角形 塗りつぶし
+            //   開始点と終点を同じにしなければ例外エラーとなる
+            Coordinate basepos1 = new Coordinate(135, 38);
+            Coordinate[] coordinates1 = new Coordinate[6]{
+                new Coordinate(basepos1),
+                new Coordinate(basepos1.X + 3, basepos1.Y - 6),
+                new Coordinate(basepos1.X - 4, basepos1.Y - 2),
+                new Coordinate(basepos1.X + 4, basepos1.Y - 2),
+                new Coordinate(basepos1.X - 3, basepos1.Y - 6),
+                new Coordinate(basepos1)
+            };
+            IPolygon ipoly1 = gf.CreatePolygon(coordinates1);
+
+            Coordinate basepos2 = new Coordinate(140, 40);
+            Coordinate[] coordinates2 = new Coordinate[6]{
+                new Coordinate(basepos2),
+                new Coordinate(basepos2.X + 3, basepos2.Y - 6),
+                new Coordinate(basepos2.X - 4, basepos2.Y - 2),
+                new Coordinate(basepos2.X + 4, basepos2.Y - 2),
+                new Coordinate(basepos2.X - 3, basepos2.Y - 6),
+                new Coordinate(basepos2)
+            };
+            IPolygon ipoly2 = gf.CreatePolygon(coordinates2);
+
+            IPolygon[] ipolys = new IPolygon[] { ipoly1, ipoly2 };
+            IMultiPolygon imultipoly = gf.CreateMultiPolygon(ipolys);
+            igeoms.Add(imultipoly);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            //layer.Style.Fill = Brushes.Red; //塗りつぶし色
+            //layer.Style.Fill = new SolidBrush(Color.Empty); //塗りつぶし色 なし
+            layer.Style.Fill = new SolidBrush(Color.FromArgb(128, 0, 0, 255)); //塗りつぶし色 透過あり
+            layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.Yellow, 1.0f); //アウトライン
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]}" + "\n"; }
+            Console.WriteLine("■TestLayerMultiPolygon");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerMultiPolygon
+            //[ 0 ] : MULTIPOLYGON (((135 38, 138 32, 131 36, 139 36, 132 32, 135 38)), ((140 40, 143 34, 136 38, 144 38, 137 34, 140 40)))
+        }
+
+        //テスト LinearRing
+        private void TestLayerLinearRing()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerLinearRing");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            // 多角形 塗りつぶし
+            //   開始点と終点を同じにしなければ例外エラーとなる
+            Coordinate basepos = new Coordinate(145, 35);
+            Coordinate[] coordinates = new Coordinate[6]{
+                new Coordinate(basepos),
+                new Coordinate(basepos.X + 3, basepos.Y - 6),
+                new Coordinate(basepos.X - 4, basepos.Y - 2),
+                new Coordinate(basepos.X + 4, basepos.Y - 2),
+                new Coordinate(basepos.X - 3, basepos.Y - 6),
+                new Coordinate(basepos)
+            };
+            var ipoly = gf.CreateLinearRing(coordinates);
+            igeoms.Add(ipoly);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            layer.Style.Line = new Pen(Color.Orange, 2); //ラインの色、幅
+            layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.Yellow, 5.0f); //アウトライン
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]}" + "\n"; }
+            Console.WriteLine("■TestLayerLinearRing");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerLinearRing
+            //[ 0 ] : LINEARRING (145 35, 148 29, 141 33, 149 33, 142 29, 145 35)
+        }
+
+        //テスト LineString
+        private void TestLayerUserdata()
+        {
+            //レイヤ生成
+            VectorLayer layer = new VectorLayer("TestLayerUserdata");
+            //ジオメトリ生成
+            List<IGeometry> igeoms = new List<IGeometry>();
+            //図形生成クラス
+            GeometryFactory gf = new GeometryFactory();
+
+            //線1の生成
+            Coordinate[] linePos1 = new Coordinate[2];
+            linePos1[0] = new Coordinate(150, 45);
+            linePos1[1] = new Coordinate(155, 40);
+            ILineString ilinestring1 = gf.CreateLineString(linePos1);
+            ilinestring1.UserData = "ラインストリング１";
+
+            igeoms.Add(ilinestring1);
+
+            //線2の生成
+            Coordinate[] linePos2 = new Coordinate[4];
+            linePos2[0] = new Coordinate(160, 35);
+            linePos2[1] = new Coordinate(163, 36);
+            linePos2[2] = new Coordinate(164, 38);
+            linePos2[3] = new Coordinate(167, 39);
+            ILineString ilinestring2 = gf.CreateLineString(linePos2);
+            ilinestring2.UserData = "ラインストリング２";
+            igeoms.Add(ilinestring2);
+
+            //ジオメトリをレイヤに反映
+            GeometryProvider gpro = new GeometryProvider(igeoms);
+            layer.DataSource = gpro;
+
+            // レイヤーのスタイル設定
+            layer.Style.Line = new Pen(Color.Purple, 2); //ラインの色、幅
+            layer.Style.Line.DashPattern = new float[] { 4.0F, 2.0F }; //破線にする { 破線の長さ, 間隔 }
+            layer.Style.EnableOutline = true; //アウトラインをレンダリングするかどうか
+            layer.Style.Outline = new Pen(Color.Olive, 1.0f); //アウトラインの色、幅
+
+            //レイヤをmapBoxに追加
+            mapBox.Map.Layers.Add(layer);
+
+            //ジオメトリ一覧をコンソールに出力
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++) { text = text + $"[ {i} ] : {igeoms[i]} : {igeoms[i].UserData}" + "\n"; }
+            Console.WriteLine("■TestLayerMultiLineString");
+            Console.WriteLine(text);
+            //↓出力
+            //■TestLayerUserdata
+            //[ 0 ] : LINESTRING (150 45, 155 40) : ラインストリング１
+            //[ 1 ] : LINESTRING (160 35, 163 36, 164 38, 167 39) : ラインストリング２
         }
 
         //基底レイヤ初期化
         private void InitializeBaseLayer()
         {
             //Map生成
-            mapBox1.Map = new Map(new Size(mapBox1.Width, mapBox1.Height));
-            mapBox1.Map.BackColor = System.Drawing.Color.LightBlue;
+            mapBox.Map = new Map(new Size(mapBox.Width, mapBox.Height));
+            mapBox.Map.BackColor = System.Drawing.Color.LightBlue;
 
             //レイヤーの作成
             VectorLayer baseLayer = new VectorLayer("baseLayer");
@@ -161,7 +491,7 @@ namespace SharpMap_Test
             baseLayer.Style.EnableOutline = true;
 
             //マップにレイヤーを追加
-            mapBox1.Map.Layers.Add(baseLayer);
+            mapBox.Map.Layers.Add(baseLayer);
         }
 
         //PointLineLayerレイヤ初期化
@@ -177,7 +507,7 @@ namespace SharpMap_Test
             layer.Style.PointColor = Brushes.Red;
             layer.Style.Line = new Pen(Color.DarkRed, 1.0f);
             //レイヤをmapBoxに追加
-            mapBox1.Map.Layers.Add(layer);
+            mapBox.Map.Layers.Add(layer);
         }
 
         //イベント - 地図上でマウス移動
@@ -205,7 +535,7 @@ namespace SharpMap_Test
             if (this.radioButtonClickModeSelect.Checked == true)
             {
                 //全レイヤの中からクリックした点を探索し、選択する
-                LayerCollection layers = mapBox1.Map.Layers;
+                LayerCollection layers = mapBox.Map.Layers;
                 foreach(Layer layer in layers)
                 {
                     //レイヤの点が当たっていたらを選択する
@@ -240,9 +570,9 @@ namespace SharpMap_Test
                 //SharpMap補助クラス
                 SharpMapHelper smh = new SharpMapHelper();
                 //レイヤ取得
-                //VectorLayer layer = smh.GetVectorLayerByName(mapBox1, "pointLineLayer");
-                //VectorLayer layer = smh.GetVectorLayerByName(mapBox1, "testlayer");
-                VectorLayer layer = smh.GetVectorLayerByName(mapBox1, "wake1");
+                //VectorLayer layer = smh.GetVectorLayerByName(mapBox, "pointLineLayer");
+                //VectorLayer layer = smh.GetVectorLayerByName(mapBox, "testlayer");
+                VectorLayer layer = smh.GetVectorLayerByName(mapBox, "wake1");
                 //クリック位置の周辺矩形の当たり判定を行う
                 Collection<IGeometry> igeoms = HitCheckEnvelope(layer, g_worldPos);
                 if (igeoms != null)
@@ -259,11 +589,11 @@ namespace SharpMap_Test
             //「クリックモード == パン」ならばActiveToolをPanにする
             if (this.radioButtonClickModePan.Checked == true)
             {
-                mapBox1.ActiveTool = MapBox.Tools.Pan;
+                mapBox.ActiveTool = MapBox.Tools.Pan;
             }
             else
             {
-                mapBox1.ActiveTool = MapBox.Tools.None;
+                mapBox.ActiveTool = MapBox.Tools.None;
             }
         }
 
@@ -278,13 +608,13 @@ namespace SharpMap_Test
         private void mapBox1_MouseUp(Coordinate worldPos, MouseEventArgs imagePos)
         {
             //ActiveToolがPanならばパン処理を行う
-            if (mapBox1.ActiveTool == MapBox.Tools.Pan)
+            if (mapBox.ActiveTool == MapBox.Tools.Pan)
             {
                 //「押した瞬間のイメージ座標」から「離れた瞬間のイメージ座標」がほぼ移動していなければ、地図は動かさない
                 if ((new SharpMapHelper()).Distance(g_mouseDownImagePos, imagePos.Location) <=1.0)
                 {
                     //ActiveToolをNoneとすることでパンさせない
-                    mapBox1.ActiveTool = MapBox.Tools.None;
+                    mapBox.ActiveTool = MapBox.Tools.None;
         
                     //指定時間（ミリ秒）後、Panに戻す
                     DelayActivePan(500);
@@ -295,13 +625,13 @@ namespace SharpMap_Test
         private async void DelayActivePan(int msec)
         {
             await Task.Delay(msec);
-            mapBox1.ActiveTool = MapBox.Tools.Pan;
+            mapBox.ActiveTool = MapBox.Tools.Pan;
         }
 
         //イベント - button1クリック
         private void button1_Click(object sender, EventArgs e)
         {
-            (new SharpMapHelper()).ViewWholeMap(mapBox1);//全体表示
+            (new SharpMapHelper()).ViewWholeMap(mapBox);//全体表示
         }
 
         //イベント - button2クリック
@@ -312,7 +642,7 @@ namespace SharpMap_Test
         //イベント - button3クリック
         private void button3_Click(object sender, EventArgs e)
         {
-            InitLayerOtherThanBase(mapBox1); //ベース以外のレイヤ初期化
+            InitLayerOtherThanBase(mapBox); //ベース以外のレイヤ初期化
         }
 
         //イベント - button4クリック
@@ -334,7 +664,7 @@ namespace SharpMap_Test
 
             //地理座標→イメージ座標に変換
             this.label1.Text = g_worldPos.ToString() + "\n" +
-                mapBox1.Map.WorldToImage(g_worldPos);
+                mapBox.Map.WorldToImage(g_worldPos);
         }
 
         //画面上のイメージ座標の更新
@@ -344,7 +674,7 @@ namespace SharpMap_Test
 
             //イメージ座標→地理座標に変換
             this.label2.Text = g_imagePos + "\n" +
-                mapBox1.Map.ImageToWorld(g_imagePos);
+                mapBox.Map.ImageToWorld(g_imagePos);
         }
 
         //点との衝突
@@ -353,7 +683,7 @@ namespace SharpMap_Test
             //いずれかのPointと衝突しているか判定
             IGeometry hitIgeome = null;
             int index = new int();
-            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox1, "pointLineLayer", g_worldPos);
+            bool ishit = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox, "pointLineLayer", g_worldPos);
             if (ishit == true)
             {
                 string txt = $"ヒットしました : [ {index} ] : " + hitIgeome.ToString();
@@ -372,7 +702,7 @@ namespace SharpMap_Test
             SharpMapHelper smh = new SharpMapHelper();
 
             //レイヤ取得
-            VectorLayer layer = smh.GetVectorLayerByName(mapBox1, layername);
+            VectorLayer layer = smh.GetVectorLayerByName(mapBox, layername);
             //ジオメトリ取得
             Collection<IGeometry> igeoms = smh.GetIGeometrysAll(layer);
             //点をジオメトリに追加
@@ -382,11 +712,11 @@ namespace SharpMap_Test
             GeometryProvider gpro = new GeometryProvider(igeoms);
             layer.DataSource = gpro;
             //レイヤのインデックスを取得
-            int index = mapBox1.Map.Layers.IndexOf(layer);
+            int index = mapBox.Map.Layers.IndexOf(layer);
             //レイヤを更新
-            mapBox1.Map.Layers[index] = layer;
+            mapBox.Map.Layers[index] = layer;
             //mapBoxを再描画
-            mapBox1.Refresh();
+            mapBox.Refresh();
         }
 
 
@@ -402,7 +732,7 @@ namespace SharpMap_Test
                 SharpMapHelper smh = new SharpMapHelper();
 
                 //レイヤ取得
-                VectorLayer layer = smh.GetVectorLayerByName(mapBox1, layername);
+                VectorLayer layer = smh.GetVectorLayerByName(mapBox, layername);
                 //ジオメトリ取得
                 Collection<IGeometry> igeoms = smh.GetIGeometrysAll(layer);
 
@@ -415,11 +745,11 @@ namespace SharpMap_Test
                 GeometryProvider gpro = new GeometryProvider(igeoms);
                 layer.DataSource = gpro;
                 //レイヤのインデックスを取得
-                int index = mapBox1.Map.Layers.IndexOf(layer);
+                int index = mapBox.Map.Layers.IndexOf(layer);
                 //レイヤを更新
-                mapBox1.Map.Layers[index] = layer;
+                mapBox.Map.Layers[index] = layer;
                 //mapBoxを再描画
-                mapBox1.Refresh();
+                mapBox.Refresh();
             }
         }
 
@@ -429,7 +759,7 @@ namespace SharpMap_Test
             //SharpMap補助クラス
             SharpMapHelper smh = new SharpMapHelper();
             //レイヤ取得
-            VectorLayer layer = smh.GetVectorLayerByName(mapBox1, layername);
+            VectorLayer layer = smh.GetVectorLayerByName(mapBox, layername);
 
             //破線にする { 破線の長さ, 間隔 }
             layer.Style.Line.DashPattern = new float[] { 5.0F, 5.0F };
@@ -441,7 +771,7 @@ namespace SharpMap_Test
             //SharpMap補助クラス
             SharpMapHelper smh = new SharpMapHelper();
             //レイヤ取得
-            VectorLayer layer = smh.GetVectorLayerByName(mapBox1, layername);
+            VectorLayer layer = smh.GetVectorLayerByName(mapBox, layername);
 
             //矢印にする (width, height, isFilled)
             layer.Style.Line.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(8f, 8f, false);
@@ -456,7 +786,7 @@ namespace SharpMap_Test
             //SharpMap補助クラス
             SharpMapHelper smh = new SharpMapHelper();
             //レイヤ取得
-            VectorLayer layer = smh.GetVectorLayerByName(mapBox1, layername);
+            VectorLayer layer = smh.GetVectorLayerByName(mapBox, layername);
 
             //点の枠線を設定する
             layer.Style.EnableOutline = true;
@@ -531,9 +861,9 @@ namespace SharpMap_Test
             GeometryProvider gpro = new GeometryProvider(igeoms);
             layer.DataSource = gpro;
             //レイヤのインデックスを取得
-            int index = mapBox1.Map.Layers.IndexOf(layer);
+            int index = mapBox.Map.Layers.IndexOf(layer);
             //レイヤを更新
-            mapBox1.Map.Layers[index] = layer;
+            mapBox.Map.Layers[index] = layer;
 
             //それとも
             //文字の描画？
@@ -551,7 +881,7 @@ namespace SharpMap_Test
             //labelLayer.DataSource = (Ligoms);
 
             //mapBoxを再描画
-            mapBox1.Refresh();
+            mapBox.Refresh();
             //====================
 
             //④点を非表示or透明化or別の色に塗りつぶし
@@ -561,7 +891,7 @@ namespace SharpMap_Test
             ////【mapBox上にPictureBoxを置く】
             ////   ×　mapBoxをクリックできなくなってしまう
             ////   ×　地図の拡大縮小についていけない
-            //picbox.Parent = mapBox1;
+            //picbox.Parent = mapBox;
             ////PictureBox picbox = new PictureBox();
             ////picbox.ClientSize = new Size(300, 300);
             ////描画先とするImageオブジェクトを作成する
@@ -577,7 +907,7 @@ namespace SharpMap_Test
             ////PictureBox1に表示する
             //picbox.Image = canvas;
             //
-            ////mapBox1.Image = canvas;
+            ////mapBox.Image = canvas;
             ////▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
         }
 
@@ -590,7 +920,7 @@ namespace SharpMap_Test
             SharpMapHelper smh = new SharpMapHelper();
 
             //レイヤ取得
-            VectorLayer layer = smh.GetVectorLayerByName(mapBox1, layername);
+            VectorLayer layer = smh.GetVectorLayerByName(mapBox, layername);
             //レイヤ内の全ジオメトリを取得
             Collection<IGeometry> igeoms = smh.GetIGeometrysAll(layer);
 
@@ -620,11 +950,11 @@ namespace SharpMap_Test
             //いずれかのPointと衝突しているか判定
             IGeometry hitIgeome = null;
             int index = new int();
-            bool isSelect = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox1, layername, g_worldPos);
+            bool isSelect = (new SharpMapHelper()).CheckHitAnyPoints(ref index, ref hitIgeome, mapBox, layername, g_worldPos);
             if (isSelect == true)
             {
                 //ヒットしたPointを選択ジオメトリにセットする
-                g_selectedGeom.Set(mapBox1, layername, index, hitIgeome);
+                g_selectedGeom.Set(mapBox, layername, index, hitIgeome);
             }//マウスカーソルに衝突するPointがないならば、選択ジオメトリを初期化
             else
             {
@@ -643,16 +973,16 @@ namespace SharpMap_Test
                 //SharpMap補助クラス
                 SharpMapHelper smh = new SharpMapHelper();
                 //レイヤ取得
-                VectorLayer layer = smh.GetVectorLayerByName(mapBox1, g_selectedGeomPrev.layername);
+                VectorLayer layer = smh.GetVectorLayerByName(mapBox, g_selectedGeomPrev.layername);
                 //Pointの色を変更
                 layer.Style.PointColor = Brushes.Red;
                 layer.Style.Line = new Pen(Color.DarkRed, 1.0f);
                 //レイヤのインデックスを取得
-                int index = mapBox1.Map.Layers.IndexOf(layer);
+                int index = mapBox.Map.Layers.IndexOf(layer);
                 //レイヤを更新
-                mapBox1.Map.Layers[index] = layer;
+                mapBox.Map.Layers[index] = layer;
                 //mapBoxを再描画
-                mapBox1.Refresh();
+                mapBox.Refresh();
             }
 
             //今選択しているものがあるならば、そのレイヤは選択中の色を設定
@@ -661,16 +991,16 @@ namespace SharpMap_Test
                 //SharpMap補助クラス
                 SharpMapHelper smh = new SharpMapHelper();
                 //レイヤ取得
-                VectorLayer layer = smh.GetVectorLayerByName(mapBox1, g_selectedGeom.layername);
+                VectorLayer layer = smh.GetVectorLayerByName(mapBox, g_selectedGeom.layername);
                 //Pointの色を変更
                 layer.Style.PointColor = Brushes.BlueViolet;
                 layer.Style.Line = new Pen(Color.Blue, 1.5f);
                 //レイヤのインデックスを取得
-                int index = mapBox1.Map.Layers.IndexOf(layer);
+                int index = mapBox.Map.Layers.IndexOf(layer);
                 //レイヤを更新
-                mapBox1.Map.Layers[index] = layer;
+                mapBox.Map.Layers[index] = layer;
                 //mapBoxを再描画
-                mapBox1.Refresh();
+                mapBox.Refresh();
             }
         }
 
@@ -679,7 +1009,7 @@ namespace SharpMap_Test
         {
             //レイヤリストの取得
             string text = null;
-            LayerCollection layers = mapBox1.Map.Layers;
+            LayerCollection layers = mapBox.Map.Layers;
             for (int i = 0; i < layers.Count; i++) {
                 text = text + $"[ {i} ] : {layers[i].LayerName }" + "\n";
 
@@ -694,14 +1024,31 @@ namespace SharpMap_Test
             SharpMapHelper smh = new SharpMapHelper();
 
             //レイヤ内の全ジオメトリを取得
-            Collection<IGeometry> igeoms = smh.GetIGeometrysAll(smh.GetVectorLayerByName(mapBox1, "pointLineLayer"));
-            //ジオメトリ一覧をラベルに表示 ( pointLineLayerレイヤ一覧表示 )
+            Collection<IGeometry> igeoms = smh.GetIGeometrysAll(smh.GetVectorLayerByName(mapBox, "pointLineLayer"));
+            //ジオメトリ一覧をラベルに表示 (レイヤ一覧表示 )
             string text = string.Empty;
             for (int i = 0; i < igeoms.Count; i++)
             {
                 text = text + $"[ {i} ] : {igeoms[i]}" + "\n";
             }
             this.richTextBoxPointLayerList.Text = text;
+        }
+
+        //レイヤのジオメトリ一覧をコンソールに出力
+        private void ConsoleGeometryList(string layername)
+        {
+            //SharpMap補助クラス
+            SharpMapHelper smh = new SharpMapHelper();
+
+            //レイヤ内の全ジオメトリを取得
+            Collection<IGeometry> igeoms = smh.GetIGeometrysAll(smh.GetVectorLayerByName(mapBox, layername));
+            //ジオメトリ一覧をラベルに表示 (レイヤ一覧表示 )
+            string text = string.Empty;
+            for (int i = 0; i < igeoms.Count; i++)
+            {
+                text = text + $"[ {i} ] : {igeoms[i]}" + "\n";
+            }
+            Console.WriteLine(text);
         }
 
         /// <summary>
@@ -734,7 +1081,7 @@ namespace SharpMap_Test
         //地図座標→イメージ座標に変換
         public System.Drawing.Point TransPosWorldToImage(Coordinate worldPos)
         {
-            return System.Drawing.Point.Round(this.mapBox1.Map.WorldToImage(worldPos));
+            return System.Drawing.Point.Round(this.mapBox.Map.WorldToImage(worldPos));
         }
 
         //周辺矩形の当たり判定を行う
